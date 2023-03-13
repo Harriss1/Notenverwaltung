@@ -11,110 +11,50 @@ namespace Notenverwaltung {
     internal static class Database {
 
         private const String databaseFile = "GradeDb.sqlite";
-        public static void InitCompleteDatabase(bool createDemoData = true) {
+        public static void InitCompleteDatabase(bool resetDatabase = true) {
+            if (resetDatabase) {
+                ResetDatabase();
+            }
             CreateDatabaseFile();
             CreateAllTables();
-            CreateAdmin();
+            InsertDemoData();
         }
 
-        private static void CreateAdmin() {
-            ExecuteQuery("");
-        }
+        ////////////////////////////////////////////////////////////////////////////////////
+        /// Verbindungsaufbau und Query-Ausführung
+        ////////////////////////////////////////////////////////////////////////////////////
 
         public static void CreateDatabaseFile() {
-            // this creates a zero-byte file
             // Abfrage um ein versehentliches Löschen zu vermeiden
             if (!File.Exists(databaseFile)) {
+                // this creates a zero-byte file
                 SQLiteConnection.CreateFile(databaseFile);
             }
 
         }
-        
-        /// <summary>
-        /// Löschung der DB-Datei und Neuerstellung aller Tabellen
-        /// </summary>
-        public static void ResetDatabase() {
-            SQLiteConnection.CreateFile(databaseFile);
-            CreateAllTables();
+
+        private static SQLiteConnection OpenConnection() {
+            string connectionString = "Data Source=" + databaseFile + ";Version=3;";
+            SQLiteConnection m_dbConnection = new SQLiteConnection(connectionString);
+            m_dbConnection.Open();
+            return m_dbConnection;
         }
 
-        private static void DropAllTables() {
-            ExecuteQuery("" +
-                "#Verbindungstabellen" +
-                "DROP TABLE if EXISTS Schueler_Hat_Klasse;" +
-                "# Haupttabellen" +
-                "DROP TABLE if EXISTS Lehrer;" +
-                "DROP TABLE if EXISTS Schueler;" +
-                "DROP TABLE if EXISTS person;" +
-                "# Von den Haupttabellen abhängige Haupttabellen" +
-                "DROP TABLE if EXISTS Klasse;");
-        }
-        private static void CreateAllTables() {
-            String createPerson =
-                "CREATE TABLE IF NOT EXISTS Person (" +
-                "PersonId INT NOT NULL AUTOINCREMENT," +
-                "Vorname VARCHAR(50)," +
-                "Nachname VARCHAR(50)," +
-                "Geburtsdatum DATE," +
-                "Geburtsort VARCHAR(50)," +
-                "Benutzername VARCHAR(50) NOT NULL UNIQUE," +
-                "Passwort VARCHAR(50)," +
-                "PRIMARY KEY (`PersonId`)); ";
-            String createTeacher =
-                "CREATE TABLE IF NOT EXISTS Lehrer(" +
-                "LehrerId INT NOT NULL AUTOINCREMENT," +
-                "PersonId INT NOT NULL," +
-                "FOREIGN KEY(PersonId) REFERENCES Person(PersonId)," +
-                "PRIMARY KEY(LehrerId)); ";
-            String createStudent = "CREATE TABLE IF NOT EXISTS Schueler(" +
-                "SchuelerId INT NOT NULL AUTOINCREMENT," +
-                "PersonId INT NOT NULL," +
-                "FOREIGN KEY(PersonId) REFERENCES Person(PersonId)," +
-                "PRIMARY KEY(SChuelerId)); ";
-            String createClass =
-                "CREATE TABLE IF NOT EXISTS Klasse(" +
-                "KlasseId INT NOT NULL AUTOINCREMENT," +
-                "Bezeichnung VARCHAR(50) NOT NULL," +
-                "StartDatum DATE NOT NULL," +
-                "EndDatum DATE," +
-                "BildungsgangId INT NOT NULL," +
-                "PRIMARY KEY(KlasseId)); ";
-            String studentHasClass =
-                "CREATE TABLE IF NOT EXISTS Schueler_Hat_Klasse(" +
-                "SchuelerId INT NOT NULL," +
-                "KlasseId INT NOT NULL," +
-                "FOREIGN KEY(SchuelerId) REFERENCES Schueler(SchuelerId)," +
-                "FOREIGN KEY(KlasseId) REFERENCES Klasse(KlasseId)); ";
-
-            ExecuteQueryList(new string[]{
-                createPerson,
-                createTeacher,
-                createStudent,
-                createClass,
-                studentHasClass
-            });
-        }
-
-        private static void ExecuteQuery(string sql) {
-            // the (20) will be ignored
-            // see https://www.sqlite.org/datatype3.html#affinity_name_examples
-            // ExecuteQuery("Create Table if not exists highscores (name varchar(20), score int)");
-            ExecuteQueryList(new string[] { sql });
-        }
         private static void ExecuteQueryList(string[] queryList) {
             SQLiteConnection m_dbConnection = OpenConnection();
             using (SQLiteTransaction transaction = m_dbConnection.BeginTransaction()) {
                 String lastQuery = "";
                 try {
-                
+
                     foreach (String query in queryList) {
                         lastQuery = query;
                         SQLiteCommand command = new SQLiteCommand(query, m_dbConnection);
                         command.ExecuteNonQuery();
-                    
+
                     }
                     transaction.Commit();
-                } catch(Exception e) {
+                }
+                catch (Exception e) {
                     transaction.Rollback();
                     Console.Error.WriteLine("Query Ausführung abgebrochen.", e);
                     Console.Error.WriteLine("Letzer Query=" + lastQuery);
@@ -123,13 +63,36 @@ namespace Notenverwaltung {
             }
             m_dbConnection.Close();
         }
-
-
-        private static SQLiteConnection OpenConnection() {
-            string connectionString = "Data Source=" + databaseFile + ";Version=3;";
-            SQLiteConnection m_dbConnection = new SQLiteConnection(connectionString);
-            m_dbConnection.Open();
-            return m_dbConnection;
+        private static void ExecuteQuery(string sql) {
+            ExecuteQueryList(new string[] { sql });
         }
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        /// Tables: Create and Delete + Insert Demodata
+        ////////////////////////////////////////////////////////////////////////////////////
+        
+        /// <summary>
+        /// Löschung der DB-Datei und Neuerstellung aller Tabellen
+        /// </summary>
+        public static void ResetDatabase() {
+            //SQLiteConnection.CreateFile(databaseFile);
+            DropAllTables();
+            CreateAllTables();
+        }
+        private static void DropAllTables() {
+            ExecuteQuery(SqliteScripts.DropAllTables());
+        }
+        private static void CreateAllTables() {
+            ExecuteQueryList(SqliteScripts.CreateAllTables());
+        }
+        private static void InsertDemoData() {
+            ExecuteQueryList(SqliteScripts.InsertDemoData());
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        /// Create, Update, Delete Specific Rows
+        ////////////////////////////////////////////////////////////////////////////////////
     }
 }
