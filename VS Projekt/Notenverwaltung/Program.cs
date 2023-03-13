@@ -10,12 +10,10 @@ using System.Data.SQLite;
 namespace Notenverwaltung {
     internal class Program {
         static void Main(string[] args) {
-            System.Console.WriteLine("Hallo duuuuu.");
-            System.Console.ReadLine();
-
             System.Console.WriteLine("Datenbank Anbindung:");
-            Database database = new Database();
-            database.makeConnection();
+            //Database database = new Database();
+            //database.CreateDatabaseFile();
+            Database.InitCompleteDatabase();
             System.Console.ReadLine();
         }
     }

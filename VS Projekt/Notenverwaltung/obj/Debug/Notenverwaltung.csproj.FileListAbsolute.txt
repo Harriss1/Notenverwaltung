@@ -40,3 +40,20 @@ C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Reposit
 C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repository\Notenverwaltung\Notenverwaltung\Notenverwaltung\obj\Debug\Notenverwaltung.csproj.CopyComplete
 C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repository\Notenverwaltung\Notenverwaltung\Notenverwaltung\obj\Debug\Notenverwaltung.exe
 C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repository\Notenverwaltung\Notenverwaltung\Notenverwaltung\obj\Debug\Notenverwaltung.pdb
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\obj\Debug\Notenverwaltung.csproj.AssemblyReference.cache
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\obj\Debug\Notenverwaltung.csproj.SuggestedBindingRedirects.cache
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\obj\Debug\Notenverwaltung.csproj.CoreCompileInputs.cache
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\obj\Debug\Notenverwaltung.exe
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\obj\Debug\Notenverwaltung.pdb
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\Notenverwaltung.exe.config
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\Notenverwaltung.exe
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\Notenverwaltung.pdb
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\EntityFramework.dll
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\EntityFramework.SqlServer.dll
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\System.Data.SQLite.dll
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\System.Data.SQLite.EF6.dll
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\System.Data.SQLite.Linq.dll
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\EntityFramework.xml
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\EntityFramework.SqlServer.xml
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\bin\Debug\System.Data.SQLite.xml
+C:\DateinKarlKlotz\Schule\SDM 2. LJ\23.02.02. Projekt Datenbank Anbinden\Repo Notenverwaltung\VS Projekt\Notenverwaltung\obj\Debug\Notenverwaltung.csproj.CopyComplete
