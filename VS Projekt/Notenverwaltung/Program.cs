@@ -12,6 +12,11 @@ namespace Notenverwaltung {
         static void Main(string[] args) {
             System.Console.WriteLine("Hallo duuuuu.");
             System.Console.ReadLine();
+
+            System.Console.WriteLine("Datenbank Anbindung:");
+            Database database = new Database();
+            database.makeConnection();
+            System.Console.ReadLine();
         }
     }
 }
