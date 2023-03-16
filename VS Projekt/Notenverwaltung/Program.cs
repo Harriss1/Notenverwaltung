@@ -13,7 +13,7 @@ namespace Notenverwaltung {
             System.Console.WriteLine("Datenbank Anbindung:");
             //Database database = new Database();
             //database.CreateDatabaseFile();
-            Database.InitCompleteDatabase();
+            Model.InitDatabase(Model.Type.SQLITE, true);
             System.Console.ReadLine();
         }
     }

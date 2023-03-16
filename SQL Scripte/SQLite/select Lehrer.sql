@@ -1,0 +1,1 @@
+Select * From Lehrer Join Person ON Lehrer.PersonId = Person.PersonId;

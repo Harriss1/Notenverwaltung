@@ -2,9 +2,9 @@
 
 // https://learn.microsoft.com/en-us/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio?view=vs-2022
 namespace Notenverwaltung {
-    internal static class SqliteScripts {
+    internal class SqliteScripts: Scripts {
 
-        internal static string[] CreateAllTables() {
+        public string[] CreateAllTables() {
             // the (20) will be ignored
             // see https://www.sqlite.org/datatype3.html#affinity_name_examples
             // ExecuteQuery("Create Table if not exists highscores (name varchar(20), score int)");
@@ -104,7 +104,7 @@ namespace Notenverwaltung {
             };
         }
 
-        internal static string DropAllTables() {
+        public string DropAllTables() {
             return 
                 //"#Verbindungstabellen " +
                 "DROP TABLE if EXISTS Schueler_Hat_Klasse;" +
@@ -123,7 +123,7 @@ namespace Notenverwaltung {
                 "DROP TABLE if EXISTS NotenTyp; ";
         }
 
-        internal static string[] InsertDemoData() {
+        public string[] InsertDemoData() {
             string person =
                 "INSERT INTO person(Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +
                 "VALUES" +
