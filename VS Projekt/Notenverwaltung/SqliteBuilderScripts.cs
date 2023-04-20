@@ -2,7 +2,7 @@
 
 // https://learn.microsoft.com/en-us/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio?view=vs-2022
 namespace Notenverwaltung {
-    internal class SqliteScripts: Scripts {
+    internal class SqliteBuilderScripts: BuilderScripts {
 
         public string[] CreateAllTables() {
             // the (20) will be ignored
@@ -131,6 +131,7 @@ namespace Notenverwaltung {
                 "('Paula', 'Pause', '1990-12-05', 'Münchhausen', 'guest', 'guest')," +
                 "('Admin', 'Nistrator', '1900-01-01', 'Münchhausen', 'admin', 'admin')," +
                 "('Herbert', 'Herbtraube', '1940-03-19', 'Münchhausen', 'teacher', 'teacher'); ";
+            
             string teacher =
                 "INSERT INTO Lehrer (PersonId)" +
                 "VALUES" +

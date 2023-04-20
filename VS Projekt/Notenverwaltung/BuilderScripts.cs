@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Notenverwaltung {
-    internal interface Scripts {
+    internal interface BuilderScripts {
 
         string[] CreateAllTables();
 

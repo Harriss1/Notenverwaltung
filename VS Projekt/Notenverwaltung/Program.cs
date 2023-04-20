@@ -11,9 +11,11 @@ namespace Notenverwaltung {
     internal class Program {
         static void Main(string[] args) {
             System.Console.WriteLine("Datenbank Anbindung:");
+            DatabaseBuilder db = new SqliteDatabaseBuilder();
             //Database database = new Database();
             //database.CreateDatabaseFile();
-            Model.InitDatabase(Model.Type.SQLITE, true);
+            Model.InitDatabase(Model.DbType.SQLITE, true);
+            Person.InitDatabase(Model.DbType.SQLITE, true);
             System.Console.ReadLine();
         }
     }

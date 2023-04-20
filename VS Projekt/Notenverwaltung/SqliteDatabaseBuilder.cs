@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 
 // https://learn.microsoft.com/en-us/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio?view=vs-2022
 namespace Notenverwaltung {
-    internal class SqliteDatabase : Database {
+    internal class SqliteDatabaseBuilder : DatabaseBuilder {
+        public SqliteDatabaseBuilder() {
+            DatabaseBuilder.type = "lite";
+        }
 
-        private Scripts scripts = new SqliteScripts();
+        private BuilderScripts scripts = new SqliteBuilderScripts();
 
         private const string databaseFile = "GradeDb.sqlite";
         public override void InitCompleteDatabase(bool resetDatabase = true) {
@@ -24,7 +27,11 @@ namespace Notenverwaltung {
             // Fügt Beispieldaten ein um grundlegende Funktionalitäten zu testen.
             InsertDemoData();
 
-            GetQueryReaderList("Select * From Lehrer Join Person ON Lehrer.PersonId = Person.PersonId;");
+            List<string> responseList = GetQueryReaderList("Select * From Lehrer Join Person ON Lehrer.PersonId = Person.PersonId;");
+            for (int i = 0; i < responseList.Count; i++) {
+                string sql = responseList[i];
+                System.Console.WriteLine("Querycontent=" + sql);
+            }
             //GetQueryReaderList((new Person).?);
         }
 
@@ -80,6 +87,12 @@ namespace Notenverwaltung {
         ////////////////////////////////////////////////////////////////////////////////////
         /// Tables: Create and Delete + Insert Demodata
         ////////////////////////////////////////////////////////////////////////////////////
+        
+
+        ///<summary>
+        /// Erstellt eine Liste an Query-Antworten die das Resultat der
+        /// Datenbank-Abfrage enthalten.
+        /// </summary>
         private List<string> GetQueryReaderList(string query) {
             List<string> readerContent = new List<string>();
             SQLiteConnection dbConnection = OpenConnection();
