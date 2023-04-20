@@ -5,13 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Notenverwaltung {
-    internal interface BuilderScripts {
-
-        string[] CreateAllTables();
-
-        string DropAllTables();
-
-        string[] InsertDemoData();
-
+    internal interface StorageQueries {
     }
 }

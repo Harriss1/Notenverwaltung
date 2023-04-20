@@ -2,7 +2,7 @@
 
 // https://learn.microsoft.com/en-us/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio?view=vs-2022
 namespace Notenverwaltung {
-    internal class SqliteBuilderScripts: BuilderScripts {
+    internal class SqliteBuilderQueries: BuilderQueries {
 
         public string[] CreateAllTables() {
             // the (20) will be ignored

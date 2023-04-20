@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 namespace Notenverwaltung {
     // ":" bedeutet abstracts oder extends BaseClass
     // "," bedeutet implements Interface
-    internal class Person : Model {
-        public string GetName() { return ""; }
+    internal class Person : TableMapper {
+        
+        public string ToTableName() {
+            return "Person";
+        }
 
-        public Person FindFirst(int id) {
-            string sql = GetScripts().DropAllTables();
-            
-            return (Person) GetDb().FindFirstById("person", id);
+        public List<string> ToColumnNames() {
+            throw new NotImplementedException();
         }
 
         // person1.foreName.lastName

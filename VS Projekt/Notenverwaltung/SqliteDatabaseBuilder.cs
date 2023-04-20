@@ -13,10 +13,10 @@ namespace Notenverwaltung {
             DatabaseBuilder.type = "lite";
         }
 
-        private BuilderScripts scripts = new SqliteBuilderScripts();
+        private BuilderQueries scripts = new SqliteBuilderQueries();
 
         private const string databaseFile = "GradeDb.sqlite";
-        public override void InitCompleteDatabase(bool resetDatabase = true) {
+        public override void InitCompleteDatabase(bool resetDatabase = false) {
             if (resetDatabase) {
                 ResetDatabase();
             }
@@ -89,7 +89,7 @@ namespace Notenverwaltung {
         ////////////////////////////////////////////////////////////////////////////////////
         
 
-        ///<summary>
+        /// <summary>
         /// Erstellt eine Liste an Query-Antworten die das Resultat der
         /// Datenbank-Abfrage enthalten.
         /// </summary>
@@ -161,10 +161,6 @@ namespace Notenverwaltung {
 
         private void Delete(string sql) {
 
-        }
-
-        public override object FindFirstById(string tableName, int id) {
-            return null;
         }
 
         private string SearchAll(string sql) {

@@ -16,7 +16,6 @@ namespace Notenverwaltung {
         }
 
         public abstract void InitCompleteDatabase(bool resetDatabase = true);
-        public abstract object FindFirstById(string tableName, int id);
 
         ////////////////////////////////////////////////////////////////////////////////////
         /// Verbindungsaufbau und Query-Ausführung

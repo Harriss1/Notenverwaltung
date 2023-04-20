@@ -62,14 +62,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database.cs" />
-    <Compile Include="SqliteDatabase.cs" />
+    <Compile Include="DatabaseBuilder.cs" />
+    <Compile Include="DatabaseStorage.cs" />
+    <Compile Include="GlobalObjects.cs" />
+    <Compile Include="SqliteDatabaseBuilder.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripts.cs" />
-    <Compile Include="SqliteScripts.cs" />
-    <Compile Include="Model.cs" />
+    <Compile Include="BuilderQueries.cs" />
+    <Compile Include="SqliteBuilderQueries.cs" />
+    <Compile Include="SqliteDatabaseStorage.cs" />
+    <Compile Include="StorageQueries.cs" />
+    <Compile Include="TableMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
