@@ -15,9 +15,12 @@ namespace Notenverwaltung {
             DatabaseBuilder databaseBuilder = new SqliteDatabaseBuilder();
             //TODO refractor Reset DB as default is not great
             databaseBuilder.InitCompleteDatabase();
+            DatabaseStorage databaseStorageObject = new SqliteDatabaseStorage();
+            GlobalObjects.Add(databaseStorageObject, "database");
+            
             System.Console.ReadLine();
-            DatabaseStorage databaseStorage = new SqliteDatabaseStorage();
-            GlobalObjects.Add(databaseStorage, "database");
+            
+
         }
     }
 }
