@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Notenverwaltung {
-    internal enum InterfaceListing {
-        Database = 0,
+    internal interface EntityMapperDeprecated {
+        string ToTableName();
+        List<KeyValue> ToKeyValue();
     }
 }

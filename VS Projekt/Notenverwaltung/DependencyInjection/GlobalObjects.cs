@@ -5,13 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Notenverwaltung {
+    /// <summary>
+    /// Dependency Injection - zentrale Zugriffsklasse
+    /// </summary>
     internal static class GlobalObjects {
         private class ObjectContainer {
-            public string key;
+            public InterfaceListing keyInterface;
             public object distinctObject;
-            public ObjectContainer(string key, object obj) {
+            public ObjectContainer(InterfaceListing keyInterface, object obj) {
                 this.distinctObject = obj;
-                this.key = key;
+                this.keyInterface = keyInterface;
             }
         }
 
@@ -21,9 +24,9 @@ namespace Notenverwaltung {
         /// return the object thats associated with the given key
         /// if there is no object with that key, it returns null
         /// </summary>
-        public static object Get(String key) {
+        public static object Get(InterfaceListing key) {
             foreach (ObjectContainer obj in allObjects) {
-                if (obj.key == key) {
+                if (obj.keyInterface == key) {
                     return obj.distinctObject;
                 }
             }
@@ -32,12 +35,18 @@ namespace Notenverwaltung {
         /// <summary>
         /// Stellt das übergebene Objekt mit dem jeweiligen Key an allen
         /// Stellen des Programms zur Verfügung
+        /// 
+        /// Der Key ist ein einmalig verwendbarer Enumerationswert, welcher
+        /// das Interface beschreibt, für welches ein einmaliges einsetzendes
+        /// Objekt im Programm existiert.
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="key"></param>
-        public static void Add(object obj, string key) {
+        /// <param name="key">Zu spezifizierendes Dependency Injection Object</param>
+        public static void Add(object obj, InterfaceListing key) {
             if (Get(key) != null) {
-                throw new ArgumentException("Key existiert bereits");
+                throw new ArgumentException("Objekt welches dieses Interface" +
+                    "implementiert, existiert bereits. Dependency kann nicht" +
+                    "erstellt werden.");
             }
             allObjects.Add(new ObjectContainer(key, obj));
         }

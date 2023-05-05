@@ -26,7 +26,7 @@ namespace Notenverwaltung {
         protected abstract void ExecuteQueries(string[] queryList);
         protected abstract void ExecuteQuerySolo(string sql);
 
-        protected abstract SQLiteConnection OpenConnection();
+        public abstract SQLiteConnection OpenConnection();
         public abstract void ResetDatabase();
 
         protected abstract void DropAllTables();

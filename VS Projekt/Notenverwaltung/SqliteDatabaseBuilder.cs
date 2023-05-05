@@ -75,7 +75,7 @@ namespace Notenverwaltung {
             ExecuteQueries(new string[] { sql });
         }
 
-        protected override SQLiteConnection OpenConnection() {
+        public override SQLiteConnection OpenConnection() {
             string connectionString = "Data Source=" + databaseFile + ";Version=3;";
             SQLiteConnection m_dbConnection = new SQLiteConnection(connectionString);
             m_dbConnection.Open();
@@ -93,7 +93,7 @@ namespace Notenverwaltung {
         /// Erstellt eine Liste an Query-Antworten die das Resultat der
         /// Datenbank-Abfrage enthalten.
         /// </summary>
-        private List<string> GetQueryReaderList(string query) {
+        public List<string> GetQueryReaderList(string query) {
             List<string> readerContent = new List<string>();
             SQLiteConnection dbConnection = OpenConnection();
             using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {

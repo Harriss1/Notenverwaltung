@@ -62,23 +62,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity.cs" />
+    <Compile Include="Person.cs" />
+    <Compile Include="TableNames.cs" />
     <Compile Include="DatabaseBuilder.cs" />
     <Compile Include="DatabaseStorage.cs" />
-    <Compile Include="GlobalObjects.cs" />
+    <Compile Include="DependencyInjection\GlobalObjects.cs" />
+    <Compile Include="DependencyInjection\InterfaceListing.cs" />
+    <Compile Include="KeyValue.cs" />
     <Compile Include="SqliteDatabaseBuilder.cs" />
-    <Compile Include="Person.cs" />
+    <Compile Include="PersonDeprecated.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BuilderQueries.cs" />
     <Compile Include="SqliteBuilderQueries.cs" />
     <Compile Include="SqliteDatabaseStorage.cs" />
     <Compile Include="StorageQueries.cs" />
-    <Compile Include="TableMapper.cs" />
+    <Compile Include="EntityMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
