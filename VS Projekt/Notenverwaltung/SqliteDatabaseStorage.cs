@@ -271,5 +271,41 @@ namespace Notenverwaltung {
             dbConnection.Close();
             System.Console.WriteLine("LastInsertId=" + content);
         }
+
+        public void Delete(Entity entity) {
+            string statement = CreateDeleteStatement(entity);
+            TransactDeleteStatement(statement);
+            System.Console.WriteLine("stmnt=" + statement);
+        }
+
+        private string CreateDeleteStatement(Entity entity) {
+            //DELETE FROM Person
+            //WHERE
+            //PersonId = 5;
+            string statement = "DELETE FROM ";
+            statement += entity.ToTableName() + " ";
+            statement += "WHERE ";
+            statement += entity.ToPrimaryKeyColumnName();
+            statement += " = " + entity.id + ";";
+            return statement;
+        }
+        private void TransactDeleteStatement(string deleteStatement) {
+            SQLiteConnection dbConnection = builder.OpenConnection();
+            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                try {
+                    // Ausführung Insert-Statement
+                    SQLiteCommand commandInsertQuery = new SQLiteCommand(deleteStatement, dbConnection);
+                    commandInsertQuery.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    Console.WriteLine("SQL-Transaction abgebrochen.", e);
+                    Console.WriteLine("Letzes Statement=" + deleteStatement);
+                    //throw;
+                }
+            }
+            dbConnection.Close();
+        }
     }
 }

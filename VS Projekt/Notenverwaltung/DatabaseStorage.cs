@@ -32,6 +32,7 @@ namespace Notenverwaltung {
         /// </summary>
         /// <param name="entity"></param>
         void Delete(EntityMapperDeprecated entity);
+        void Delete(Entity entity);
 
         /// <summary>
         /// Erstellt einen Datensatz in einer Tabelle

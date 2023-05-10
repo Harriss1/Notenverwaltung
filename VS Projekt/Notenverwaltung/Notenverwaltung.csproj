@@ -78,7 +78,7 @@
     <Compile Include="SqliteBuilderQueries.cs" />
     <Compile Include="SqliteDatabaseStorage.cs" />
     <Compile Include="StorageQueries.cs" />
-    <Compile Include="EntityMapper.cs" />
+    <Compile Include="EntityMapperDeprecated.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

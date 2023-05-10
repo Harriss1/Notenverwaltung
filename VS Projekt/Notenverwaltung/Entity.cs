@@ -9,7 +9,7 @@ namespace Notenverwaltung {
         private DatabaseStorage storage;
 
         // Primary Key
-        public int id { get; private set; }
+        public int id { get; protected set; }
 
         public Entity() {
             storage = (DatabaseStorage)GlobalObjects.Get(InterfaceListing.DatabaseStorage);
@@ -36,5 +36,33 @@ namespace Notenverwaltung {
             return this;
         }
 
+        public void Delete() {
+            storage.Delete(this);
+            id = -1;
+        }
+
+        public string ToText() {
+            string text = "";
+            for (int i = 0; i < ToKeyValue().Count; i++) {
+                text += "" + ToKeyValue()[i].GetKey() + "=";
+                text += ToKeyValue()[i].GetValue();
+                if (i < ToKeyValue().Count - 1) {
+                    text += " | ";
+                }
+            }
+            text += "";
+            return text;
+        }
+
+        public void Print() {
+            System.Console.WriteLine(this.ToTableName() + ": " + this.ToText());
+        }
+
+        public Entity Find(string key, string value) {
+            return null;
+        }
+        public Entity FindById(int id) {
+            return null;
+        }
     }
 }

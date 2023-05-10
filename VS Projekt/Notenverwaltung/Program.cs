@@ -26,6 +26,12 @@ namespace Notenverwaltung {
 
             Person rolf = new Person("Rolf", "Müller", "18-12-2022", "Bielefeld", "blastermaxxer", "123");
             rolf.Create();
+            Person hermine = new Person("Hermine", "Ganges", "11-06-2022", "Pattern", "trabbi", "123");
+            hermine.Create();
+            System.Console.WriteLine("Created: " + hermine.ToText());
+            Person gunnar = new Person("Gunnar", "Mülli", "15-01-2022", "Kölle", "zander", "123");
+            gunnar.Create();
+            System.Console.WriteLine("Created: " + gunnar.ToText());
 
             System.Console.WriteLine("Created: Name=" + rolf.firstname + " id=" + rolf.id);
             rolf.firstname = "Lutz";
@@ -33,8 +39,17 @@ namespace Notenverwaltung {
             rolf.Update();
 
             System.Console.WriteLine("Updated: Name=" + rolf.firstname + ", " +rolf.lastname + " id=" + rolf.id);
+            System.Console.WriteLine("Updated: " + rolf.ToText());
+            rolf.Delete();
+            System.Console.WriteLine("Deleted: " + rolf.ToText());
 
-            // TODO Read (Find) und Delete
+            Person searchHermine = new Person();
+            searchHermine.FindById(4);
+            searchHermine.Print();
+            
+
+
+            // TODO Find und Beziehungen
             // TODO Infos ausgeben zu jeden Objekt als ganze Zeile
             // TODO zweite Person erstellen, beide ändern, ausgeben, löschen
             System.Console.ReadLine();

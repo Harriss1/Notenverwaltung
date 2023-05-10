@@ -15,7 +15,9 @@ namespace Notenverwaltung {
 
         public string username;
         public string password;
-
+        public Person() {
+            id = -1;
+        }
         public Person(string firstname, string lastname, string birthdate, string birthplace, string username, string password) {
             this.firstname = firstname;
             this.lastname = lastname;
