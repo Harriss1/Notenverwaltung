@@ -50,6 +50,7 @@ namespace Notenverwaltung {
 
 
             // TODO Find und Beziehungen
+            // TODO restliche Tabellen + Demodaten erstellen
             // TODO Infos ausgeben zu jeden Objekt als ganze Zeile
             // TODO zweite Person erstellen, beide ändern, ausgeben, löschen
             System.Console.ReadLine();

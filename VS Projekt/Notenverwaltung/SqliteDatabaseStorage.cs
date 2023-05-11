@@ -307,5 +307,45 @@ namespace Notenverwaltung {
             }
             dbConnection.Close();
         }
+
+        /// <summary>
+        /// Erstellt eine Liste an Query-Antworten die das Resultat der
+        /// Datenbank-Abfrage enthalten.
+        /// "Select * From Lehrer Join Person ON Lehrer.PersonId = Person.PersonId;"
+        /// </summary>
+        private List<string> GetQueryReaderList(string query) {
+            List<string> readerContent = new List<string>();
+            SQLiteConnection dbConnection = builder.OpenConnection();
+            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                string currentQuery = "";
+                try {
+                    currentQuery = query;
+                    SQLiteCommand command = new SQLiteCommand(query, dbConnection);
+
+                    SQLiteDataReader rdr = command.ExecuteReader();
+                    while (rdr.Read()) {
+                        string foreName = (string)rdr["Vorname"];
+                        List<string> columnContent = new List<string>();
+                        for (int i = 0; i < rdr.FieldCount; i++) {
+                            columnContent.Add(rdr.GetValue(i).ToString());
+                        }
+                        Console.WriteLine("Response for query " + query + " = " + foreName);
+                        foreach (string column in columnContent) {
+                            Console.WriteLine("Alle Columns=" + column);
+                        }
+                        readerContent.Add(foreName);
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    Console.Error.WriteLine("Query Ausführung abgebrochen.", e);
+                    Console.Error.WriteLine("Letzer Query=" + currentQuery);
+                    //throw;
+                }
+            }
+            dbConnection.Close();
+            return readerContent;
+        }
     }
 }

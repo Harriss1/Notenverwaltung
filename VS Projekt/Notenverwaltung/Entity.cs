@@ -53,7 +53,9 @@ namespace Notenverwaltung {
             text += "";
             return text;
         }
-
+        /// <summary>
+        /// Konsolenausgabe: Tabellenname + Inhalte der Felder der einzelnen Entität
+        /// </summary>
         public void Print() {
             System.Console.WriteLine(this.ToTableName() + ": " + this.ToText());
         }
@@ -62,6 +64,9 @@ namespace Notenverwaltung {
             return null;
         }
         public Entity FindById(int id) {
+            return null;
+        }
+        public Entity FindByAttributes(List<KeyValue> keyValues) {
             return null;
         }
     }
