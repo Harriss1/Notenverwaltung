@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity.cs" />
+    <Compile Include="KeyValueContainer.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="TableNames.cs" />
     <Compile Include="DatabaseBuilder.cs" />

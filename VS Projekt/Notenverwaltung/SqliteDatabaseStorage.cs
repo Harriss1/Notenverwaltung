@@ -88,10 +88,6 @@ namespace Notenverwaltung {
             throw new NotImplementedException();
         }
 
-        public void Delete(EntityMapperDeprecated entity) {
-            throw new System.NotImplementedException();
-        }
-
         public object FindTeacherById(string tableName, int id) {
             throw new System.NotImplementedException();
             //return null;
@@ -130,10 +126,12 @@ namespace Notenverwaltung {
         /// <param name="entity">Konkretisierung des Entity-Interfaces</param>
         /// <returns>Id der neu eingefügten Zeile</returns>
         private static string CreateInsertStatement(Entity entity) {
-            String exampleStatement = 
+            #pragma warning disable CS0219 // Beispiel des erstellten Statements
+            string exampleStatement = 
                 "INSERT INTO person(Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +
                 "VALUES" +
                 "('Max', 'Mustermann', '2022-01-01', 'Bielefeld', 'user', 'user');";
+            #pragma warning restore CS0219
 
             // Tabellen-Name
             String insertQuery = "INSERT INTO " + entity.ToTableName() + "(";
@@ -165,11 +163,13 @@ namespace Notenverwaltung {
         /// <param name="entity">Konkretisierung des Entity-Interfaces</param>
         /// <returns>Id der neu eingefügten Zeile</returns>
         private static string CreateUpdateStatement(Entity entity) {
-            String exampleStatement =
+            #pragma warning disable CS0219 // Beispiel des erstellten Statements
+            string exampleStatement =
                 "UPDATE Person" +
                 "SET Vorname = 'neuer Vorname'," +
                 "Nachname = 'neuer Nachname'" +
                 "WHERE PersonId = 1;";
+            #pragma warning restore CS0219
 
             // Tabellen-Name
             String updateStatement = "UPDATE " + entity.ToTableName() + " ";
@@ -312,6 +312,8 @@ namespace Notenverwaltung {
         /// Erstellt eine Liste an Query-Antworten die das Resultat der
         /// Datenbank-Abfrage enthalten.
         /// "Select * From Lehrer Join Person ON Lehrer.PersonId = Person.PersonId;"
+        /// 
+        /// Nur als Referenz hier belassen (deprecated)
         /// </summary>
         private List<string> GetQueryReaderList(string query) {
             List<string> readerContent = new List<string>();

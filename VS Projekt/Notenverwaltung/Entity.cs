@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Notenverwaltung {
     internal abstract class Entity {
@@ -24,6 +20,13 @@ namespace Notenverwaltung {
         /// </summary>
         /// <returns></returns>
         public abstract List<KeyValue> ToKeyValue();
+        public abstract KeyValueContainer ToKeyValueAttributeList();
+
+        /// <summary>
+        /// Alle Attributes mittels einer Key-Value Liste füllen.
+        /// </summary>
+        /// <param name="attributeList">Liste mit key-value Paaren</param>
+        public abstract void SetAllAttributes(KeyValueContainer attributeList, int id);
 
         public Entity Create() {
             int lastRowId = storage.InsertSingleEntity(this);
@@ -60,13 +63,31 @@ namespace Notenverwaltung {
             System.Console.WriteLine(this.ToTableName() + ": " + this.ToText());
         }
 
-        public Entity Find(string key, string value) {
+        public Entity FindFirst(string key, string value) {
             return null;
         }
         public Entity FindById(int id) {
+            //Entity entity = storage.FindById(id);
+            //if (entity != null) {
+            //    SelfUpdate(entity);
+            //    return this; 
+            //}
+            // FromKeyValue!!!
             return null;
         }
-        public Entity FindByAttributes(List<KeyValue> keyValues) {
+        private void SelfUpdate(Entity entity) {
+            foreach (KeyValue keyValuePair in ToKeyValue()) {
+                keyValuePair.GetKey();
+            }
+        }
+        public Entity FindFirstByAttributes(List<KeyValue> keyValues) {
+            return null;
+        }
+
+        public List<Entity> SearchByAttributes(List<KeyValue> keyValues) {
+            return null;
+        }
+        public List<Entity> Search(string key, string value) {
             return null;
         }
     }

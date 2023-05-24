@@ -42,12 +42,12 @@ namespace Notenverwaltung {
             System.Console.WriteLine("Updated: " + rolf.ToText());
             rolf.Delete();
             System.Console.WriteLine("Deleted: " + rolf.ToText());
-
+            
+            System.Console.WriteLine("Suche Hermine");
             Person searchHermine = new Person();
             searchHermine.FindById(4);
             searchHermine.Print();
             
-
 
             // TODO Find und Beziehungen
             // TODO restliche Tabellen + Demodaten erstellen

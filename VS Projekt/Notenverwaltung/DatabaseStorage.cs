@@ -31,7 +31,6 @@ namespace Notenverwaltung {
         /// Löscht den Datensatz anhand seiner Id
         /// </summary>
         /// <param name="entity"></param>
-        void Delete(EntityMapperDeprecated entity);
         void Delete(Entity entity);
 
         /// <summary>
