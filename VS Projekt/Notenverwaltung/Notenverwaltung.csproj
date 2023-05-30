@@ -62,24 +62,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity.cs" />
-    <Compile Include="KeyValueContainer.cs" />
-    <Compile Include="Person.cs" />
-    <Compile Include="TableNames.cs" />
-    <Compile Include="DatabaseBuilder.cs" />
-    <Compile Include="DatabaseStorage.cs" />
+    <Compile Include="DatabaseWrapper\Entity.cs" />
+    <Compile Include="DatabaseWrapper\AttributeToValuesDescription.cs" />
+    <Compile Include="Model\Person.cs" />
+    <Compile Include="Model\TableNames.cs" />
+    <Compile Include="DatabaseWrapper\DatabaseBuilder.cs" />
+    <Compile Include="DatabaseWrapper\DatabaseStorage.cs" />
     <Compile Include="DependencyInjection\GlobalObjects.cs" />
     <Compile Include="DependencyInjection\InterfaceListing.cs" />
-    <Compile Include="KeyValue.cs" />
-    <Compile Include="SqliteDatabaseBuilder.cs" />
-    <Compile Include="PersonDeprecated.cs" />
+    <Compile Include="DatabaseWrapper\KeyValue.cs" />
+    <Compile Include="DatabaseWrapper\SqliteDatabaseBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BuilderQueries.cs" />
-    <Compile Include="SqliteBuilderQueries.cs" />
-    <Compile Include="SqliteDatabaseStorage.cs" />
-    <Compile Include="StorageQueries.cs" />
-    <Compile Include="EntityMapperDeprecated.cs" />
+    <Compile Include="DatabaseWrapper\BuilderQueries.cs" />
+    <Compile Include="DatabaseWrapper\SqliteBuilderQueries.cs" />
+    <Compile Include="DatabaseWrapper\SqliteDatabaseStorage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -7,84 +7,7 @@ namespace Notenverwaltung {
     internal class SqliteDatabaseStorage : DatabaseStorage {
         private SqliteDatabaseBuilder builder = new SqliteDatabaseBuilder();
 
-        public void Create(EntityMapperDeprecated entity) {
-            string tablename = entity.ToTableName();
-            //string person =
-            //    "INSERT INTO person(Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +
-            //    "VALUES" +
-            //    "('Max', 'Mustermann', '2022-01-01', 'Bielefeld', 'user', 'user')," +
-            //    "('Paula', 'Pause', '1990-12-05', 'Münchhausen', 'guest', 'guest')," +
-            //    "('Admin', 'Nistrator', '1900-01-01', 'Münchhausen', 'admin', 'admin')," +
-            //    "('Herbert', 'Herbtraube', '1940-03-19', 'Münchhausen', 'teacher', 'teacher'); ";
-            string firstname ="";
-            string lastname = "";
-            string birthdate = "";
-            string birthplace = "";
-            string username = "";
-            string password = "";
-
-            if(tablename.Equals(TableNames.person)) {
-                firstname = GetValue(entity.ToKeyValue(), TableNames.PersonAttr.firstname);
-                lastname = GetValue(entity.ToKeyValue(), TableNames.PersonAttr.lastname);
-                birthplace = GetValue(entity.ToKeyValue(), TableNames.PersonAttr.birthplace);
-                username = GetValue(entity.ToKeyValue(), TableNames.PersonAttr.username);
-                password = GetValue(entity.ToKeyValue(), TableNames.PersonAttr.password);
-                birthdate = GetValue(entity.ToKeyValue(), TableNames.PersonAttr.birthdate);
-                string query = "INSERT INTO person(Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +
-                "VALUES" +
-                "('" 
-                + firstname +
-                "', '" +
-                lastname +
-                "', '" +
-                birthdate +
-                "', '" +
-                birthplace +
-                "', '" +
-                username +
-                "', '" +
-                password +
-                "')";
-            }
-
-            //string teacher =
-            //    "INSERT INTO Lehrer (PersonId)" +
-            //    "VALUES" +
-            //    "(3)," +
-            //    "(4); ";
-            
-
-            SQLiteConnection dbConnection = builder.OpenConnection();
-            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
-                string query = "";
-                try {
-                    SQLiteCommand command = new SQLiteCommand(query, dbConnection);
-
-                    SQLiteDataReader rdr = command.ExecuteReader();
-                    while (rdr.Read()) {
-                        string foreName = (string)rdr["Vorname"];
-                        List<string> columnContent = new List<string>();
-                        for (int i = 0; i < rdr.FieldCount; i++) {
-                            columnContent.Add(rdr.GetValue(i).ToString());
-                        }
-                        Console.WriteLine("Response for query " + query + " = " + foreName);
-                        foreach (string column in columnContent) {
-                            Console.WriteLine("Alle Columns=" + column);
-                        }
-                    }
-                    transaction.Commit();
-                }
-                catch (Exception e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen.", e);
-                    //throw;
-                }
-            }
-            dbConnection.Close();
-            throw new System.NotImplementedException();
-        }
-
-        private string GetValue(List<KeyValue> keyValueList, string firstname) {
+                private string GetValue(List<KeyValue> keyValueList, string firstname) {
             throw new NotImplementedException();
         }
 
@@ -101,17 +24,13 @@ namespace Notenverwaltung {
             return "Info on this object";
         }
 
-        public EntityMapperDeprecated Update(EntityMapperDeprecated entity) {
-            throw new System.NotImplementedException();
-        }
-
         public void UpdateSingleEntity(Entity entity) {
             string statement = CreateUpdateStatement(entity);
             TransactUpdateStatement(statement);
         }
 
         public int InsertSingleEntity(Entity entity) {
-            string insertStatement = CreateInsertStatement(entity);
+            string insertStatement = CreateInsertStatementByContainer(entity);
             int lastRowId = TransactInsertStatement(insertStatement);
             System.Console.WriteLine("LastInsertId=" + lastRowId.ToString());
             return lastRowId;
@@ -136,7 +55,7 @@ namespace Notenverwaltung {
             // Tabellen-Name
             String insertQuery = "INSERT INTO " + entity.ToTableName() + "(";
             // Tabellen-Spalten
-            foreach (KeyValue keyValuePair in entity.ToKeyValue()) {
+            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
                 insertQuery += keyValuePair.GetKey();
                 insertQuery += ", ";
             }
@@ -144,7 +63,35 @@ namespace Notenverwaltung {
             insertQuery += ") ";
             // Werte der einzelnen Felder
             insertQuery += "Values (";
-            foreach (KeyValue keyValuePair in entity.ToKeyValue()) {
+            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
+                insertQuery += "'" + keyValuePair.GetValue() + "'";
+                insertQuery += ", ";
+            }
+            insertQuery = insertQuery.Substring(0, insertQuery.Length - 2);
+            insertQuery += ");";
+
+            return insertQuery;
+        }
+        private static string CreateInsertStatementByContainer(Entity entity) {
+            #pragma warning disable CS0219 // Beispiel des erstellten Statements
+            string exampleStatement =
+                "INSERT INTO person(Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +
+                "VALUES" +
+                "('Max', 'Mustermann', '2022-01-01', 'Bielefeld', 'user', 'user');";
+            #pragma warning restore CS0219
+
+            // Tabellen-Name
+            String insertQuery = "INSERT INTO " + entity.ToTableName() + "(";
+            // Tabellen-Spalten
+            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
+                insertQuery += keyValuePair.GetKey();
+                insertQuery += ", ";
+            }
+            insertQuery = insertQuery.Substring(0, insertQuery.Length - 2);
+            insertQuery += ") ";
+            // Werte der einzelnen Felder
+            insertQuery += "Values (";
+            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
                 insertQuery += "'" + keyValuePair.GetValue() + "'";
                 insertQuery += ", ";
             }
@@ -176,7 +123,7 @@ namespace Notenverwaltung {
             updateStatement += "SET ";
 
             // Neue Feld-Werte setzen
-            foreach (KeyValue keyValuePair in entity.ToKeyValue()) {
+            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
                 updateStatement += keyValuePair.GetKey();
                 updateStatement += " = ";
                 updateStatement += "'" + keyValuePair.GetValue() + "'";
@@ -186,7 +133,8 @@ namespace Notenverwaltung {
 
             // WHERE
             updateStatement += " WHERE ";
-            updateStatement += entity.ToPrimaryKeyColumnName() 
+
+            updateStatement += entity.ToAttributeValueDescription().primaryKey
                 + " = " + entity.id
                 + ";";
             return updateStatement;
@@ -246,32 +194,6 @@ namespace Notenverwaltung {
             dbConnection.Close();
         }
 
-        private void GetLastId() {
-            // get last id
-            string content = "";
-            string query = "SELECT last_insert_rowid();";
-            List<string> readerContent = new List<string>();
-            SQLiteConnection dbConnection = builder.OpenConnection();
-            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
-                try {
-                    SQLiteCommand command = new SQLiteCommand(query, dbConnection);
-
-                    Int64 LastRowID64 = (Int64)command.ExecuteScalar();
-                    int LastRowID = (int)LastRowID64;
-                    content = LastRowID.ToString();
-                    transaction.Commit();
-                }
-                catch (Exception e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen.", e);
-                    Console.Error.WriteLine("Letzer Query=" + query);
-                    //throw;
-                }
-            }
-            dbConnection.Close();
-            System.Console.WriteLine("LastInsertId=" + content);
-        }
-
         public void Delete(Entity entity) {
             string statement = CreateDeleteStatement(entity);
             TransactDeleteStatement(statement);
@@ -285,7 +207,7 @@ namespace Notenverwaltung {
             string statement = "DELETE FROM ";
             statement += entity.ToTableName() + " ";
             statement += "WHERE ";
-            statement += entity.ToPrimaryKeyColumnName();
+            statement += entity.ToAttributeValueDescription().primaryKey;
             statement += " = " + entity.id + ";";
             return statement;
         }
@@ -348,6 +270,115 @@ namespace Notenverwaltung {
             }
             dbConnection.Close();
             return readerContent;
+        }
+
+        public AttributeToValuesDescription FindById(int id, Entity entity) {
+            string query = CreateFindByIdQuery(id, entity);
+            AttributeToValuesDescription retrievedDescription =
+                TransactFindQuery(query, entity);
+            return retrievedDescription;
+        }
+
+        private string CreateFindByIdQuery(int id, Entity entity) {
+            //string exampleQueryRelation = "Select * From Lehrer Join Person ON Lehrer.PersonId = Person.PersonId;";
+            //string exampleQuery = "Select * From Person WHERE PersonId =99;";
+            string query 
+                = "SELECT * FROM " + entity.ToTableName() 
+                + " WHERE " + entity.ToAttributeValueDescription().primaryKey
+                + " = " + id
+                + ";";
+            return query;
+        }
+
+        public AttributeToValuesDescription FindByKeyValue(KeyValue keyValueParam, Entity entity) {
+            string query = CreateFindByStringAttributeQuery(keyValueParam, entity);
+            AttributeToValuesDescription retrievedDescription =
+                TransactFindQuery(query, entity);
+            return retrievedDescription;
+        }
+
+        private AttributeToValuesDescription TransactFindQuery(string query, Entity entity) {
+            System.Console.WriteLine("query = " + query);
+            AttributeToValuesDescription entityDescription = entity.ToAttributeValueDescription();
+            AttributeToValuesDescription retrievedDescription
+                = new AttributeToValuesDescription(
+                    entityDescription.primaryKey,
+                    entityDescription.primaryKeyValue);
+
+            List<string> debugContent = new List<string>();
+            SQLiteConnection dbConnection = builder.OpenConnection();
+            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                try {
+                    SQLiteCommand command = new SQLiteCommand(query, dbConnection);
+
+                    SQLiteDataReader rdr = command.ExecuteReader();
+                    if (!rdr.HasRows) {
+                        Console.WriteLine("Datensatz exisitert nicht für ID = " + entityDescription.primaryKeyValue);
+                        return null;
+                    }
+                    while (rdr.Read()) {
+                        foreach (KeyValue keyValuePair in entityDescription.GetList()) {
+                            string fieldContent = "";
+                            object o = rdr[keyValuePair.GetKey()].GetType();
+                            System.Console.WriteLine("Type = " + o.ToString());
+                            if (rdr[keyValuePair.GetKey()].GetType().ToString().Equals("System.String")) {
+                                fieldContent = (string)rdr[keyValuePair.GetKey()];
+                            }
+                            if (rdr[keyValuePair.GetKey()].GetType().ToString().Equals("System.DateTime")) {
+                                DateTime dateTime = (DateTime)rdr[keyValuePair.GetKey()];
+                                fieldContent = dateTime.ToString("yyyy-MM-dd");
+                            }
+                            if (rdr[keyValuePair.GetKey()].GetType().ToString().Equals("System.Integer")) {
+                                fieldContent = rdr[keyValuePair.GetKey()].ToString();
+                            }
+                            retrievedDescription.Add(keyValuePair.GetKey(), fieldContent);
+                            debugContent.Add(fieldContent);
+                        }
+                    }
+                    transaction.Commit();
+                }
+                catch (System.FormatException e) {
+                    transaction.Rollback();
+                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                    Console.Error.WriteLine("Letzer Query=" + query);
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.Error.WriteLine("Es wurde ein Datumswert falsch in die Datenbank geschrieben!");
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                }
+                catch (System.InvalidCastException e) {
+                    transaction.Rollback();
+                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                    Console.Error.WriteLine("Letzer Query=" + query);
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.Error.WriteLine("Format wurde falsch konvertiert (z.B. Date nicht in String umgewandelt)");
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                    Console.Error.WriteLine("Letzer Query=" + query);
+                    //throw;
+                }
+            }
+            dbConnection.Close();
+
+            for (int i = 0; i < debugContent.Count; i++) {
+                string sql = debugContent[i];
+                System.Console.WriteLine("FieldContents=" + sql);
+            }
+            return retrievedDescription;
+        }
+
+        private string CreateFindByStringAttributeQuery(KeyValue keyValuePair, Entity entity) {
+            //string exampleQuery = "Select * From Person WHERE Vorname = Hermine;";
+            string query
+                = "SELECT * FROM " + entity.ToTableName()
+                + " WHERE " + keyValuePair.GetKey()
+                + " LIKE '" + keyValuePair.GetValue()
+                + "';";
+            return query;
         }
     }
 }

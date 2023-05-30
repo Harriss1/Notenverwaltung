@@ -12,21 +12,21 @@ namespace Notenverwaltung {
         }
 
         public abstract string ToTableName();
-        public abstract string ToPrimaryKeyColumnName();
 
         /// <summary>
         /// Mapping der Objekt-Attribute hin zu Tabellen-Spalten
         /// Id bzw. Primary-Key wird separat mittels ToPrimaryKeyColumnName() gemappt
         /// </summary>
         /// <returns></returns>
-        public abstract List<KeyValue> ToKeyValue();
-        public abstract KeyValueContainer ToKeyValueAttributeList();
+        public abstract AttributeToValuesDescription ToAttributeValueDescription();
 
         /// <summary>
-        /// Alle Attributes mittels einer Key-Value Liste füllen.
+        /// Alle Attribute der Entität mittels einer Key-Value Liste setzen.
+        /// 
+        /// Vorsicht: Nicht verwechseln mit Aktualisierung eines Datensatzes.
         /// </summary>
-        /// <param name="attributeList">Liste mit key-value Paaren</param>
-        public abstract void SetAllAttributes(KeyValueContainer attributeList, int id);
+        /// <param name="attributeToValuesDescription">Beschreibung der Entität Attribut-Zu-Attributwerte</param>
+        protected abstract void SetAttributesFromInternal(AttributeToValuesDescription attributeToValuesDescription);
 
         public Entity Create() {
             int lastRowId = storage.InsertSingleEntity(this);
@@ -46,10 +46,10 @@ namespace Notenverwaltung {
 
         public string ToText() {
             string text = "";
-            for (int i = 0; i < ToKeyValue().Count; i++) {
-                text += "" + ToKeyValue()[i].GetKey() + "=";
-                text += ToKeyValue()[i].GetValue();
-                if (i < ToKeyValue().Count - 1) {
+            for (int i = 0; i < ToAttributeValueDescription().GetList().Count; i++) {
+                text += "" + ToAttributeValueDescription().GetList()[i].GetKey() + "=";
+                text += ToAttributeValueDescription().GetList()[i].GetValue();
+                if (i < ToAttributeValueDescription().GetList().Count - 1) {
                     text += " | ";
                 }
             }
@@ -63,22 +63,23 @@ namespace Notenverwaltung {
             System.Console.WriteLine(this.ToTableName() + ": " + this.ToText());
         }
 
-        public Entity FindFirst(string key, string value) {
-            return null;
+        public Entity FindFirstByStringAttribute(KeyValue keyValuePair) {
+            AttributeToValuesDescription retrievedContent = storage.FindByKeyValue(keyValuePair, this);
+            if (retrievedContent == null) {
+                // Falls kein Datensatz gefunden wird
+                return null;
+            }
+            SetAttributesFromInternal(retrievedContent);
+            return this;
         }
         public Entity FindById(int id) {
-            //Entity entity = storage.FindById(id);
-            //if (entity != null) {
-            //    SelfUpdate(entity);
-            //    return this; 
-            //}
-            // FromKeyValue!!!
-            return null;
-        }
-        private void SelfUpdate(Entity entity) {
-            foreach (KeyValue keyValuePair in ToKeyValue()) {
-                keyValuePair.GetKey();
+            AttributeToValuesDescription retrievedContent = storage.FindById(id, this);
+            if (retrievedContent == null) {
+                // Falls kein Datensatz gefunden wird
+                return null;
             }
+            SetAttributesFromInternal(retrievedContent);
+            return this;
         }
         public Entity FindFirstByAttributes(List<KeyValue> keyValues) {
             return null;

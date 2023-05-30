@@ -24,12 +24,12 @@ namespace Notenverwaltung {
                 Get(InterfaceListing.DatabaseStorage);
             System.Console.WriteLine("ObjectInfo = " + storage.GetInfo());
 
-            Person rolf = new Person("Rolf", "Müller", "18-12-2022", "Bielefeld", "blastermaxxer", "123");
+            Person rolf = new Person("Rolf", "Müller", "2022-12-18", "Bielefeld", "blastermaxxer", "123");
             rolf.Create();
-            Person hermine = new Person("Hermine", "Ganges", "11-06-2022", "Pattern", "trabbi", "123");
+            Person hermine = new Person("Hermine", "Ganges", "1800-12-15", "Pattern", "trabbi", "123");
             hermine.Create();
             System.Console.WriteLine("Created: " + hermine.ToText());
-            Person gunnar = new Person("Gunnar", "Mülli", "15-01-2022", "Kölle", "zander", "123");
+            Person gunnar = new Person("Gunnar", "Mülli", "2001-04-12", "Kölle", "zander", "123");
             gunnar.Create();
             System.Console.WriteLine("Created: " + gunnar.ToText());
 
@@ -45,11 +45,15 @@ namespace Notenverwaltung {
             
             System.Console.WriteLine("Suche Hermine");
             Person searchHermine = new Person();
-            searchHermine.FindById(4);
+            searchHermine.FindById(6);
             searchHermine.Print();
-            
+            searchHermine.FindFirstByStringAttribute(new KeyValue(TableNames.PersonAttr.firstname, "Hermine"));
+            searchHermine.Print();
 
-            // TODO Find und Beziehungen
+
+            // TODO Find by ID (done)
+            // TODO Find By KeyValue - String (done)
+            // TODO Beziehungen
             // TODO restliche Tabellen + Demodaten erstellen
             // TODO Infos ausgeben zu jeden Objekt als ganze Zeile
             // TODO zweite Person erstellen, beide ändern, ausgeben, löschen

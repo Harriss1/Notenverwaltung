@@ -17,17 +17,6 @@ namespace Notenverwaltung {
         string GetInfo();
 
         /// <summary>
-        /// Aktualisiert den Datensatz anhand seiner Id
-        /// </summary>
-        /// <param name="entity"></param>
-        EntityMapperDeprecated Update(EntityMapperDeprecated entity);
-        /// <summary>
-        /// Erstellt einen neuen Datensatz, und gibt
-        /// diesen zurück.
-        /// </summary>
-        /// <param name="entity"></param>
-        void Create(EntityMapperDeprecated entity);
-        /// <summary>
         /// Löscht den Datensatz anhand seiner Id
         /// </summary>
         /// <param name="entity"></param>
@@ -37,6 +26,7 @@ namespace Notenverwaltung {
         /// Erstellt einen Datensatz in einer Tabelle
         /// </summary>
         /// <param name="entity"></param>
+        /// <returns>Id des primarykey</returns>
         int InsertSingleEntity(Entity entity);
 
         /// <summary>
@@ -44,5 +34,7 @@ namespace Notenverwaltung {
         /// </summary>
         /// <param name="entity"></param>
         void UpdateSingleEntity(Entity entity);
+        AttributeToValuesDescription FindById(int id, Entity entity);
+        AttributeToValuesDescription FindByKeyValue(KeyValue keyValuePair, Entity entity);
     }
 }
