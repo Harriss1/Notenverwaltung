@@ -23,8 +23,8 @@ namespace Notenverwaltung {
 
         protected abstract void CreateDatabaseFile();
 
-        protected abstract void ExecuteQueries(string[] queryList);
-        protected abstract void ExecuteQuerySolo(string sql);
+        protected abstract void ExecuteStatements(string[] queryList);
+        protected abstract void ExecuteSoloStatement(string sql);
 
         public abstract SQLiteConnection OpenConnection();
         public abstract void ResetDatabase();

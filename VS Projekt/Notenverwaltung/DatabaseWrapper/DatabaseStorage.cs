@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Notenverwaltung {
+    // Dependency Injection Naming-Konvention favorisiert kein "I"-Präfix
+#pragma warning disable IDE1006 
     internal interface DatabaseStorage {
+#pragma warning restore IDE1006
         /// <summary>
         /// Findet einen Lehrer anhand seiner Id in der Tabelle.
         /// </summary>

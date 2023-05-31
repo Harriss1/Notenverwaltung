@@ -13,7 +13,7 @@ namespace Notenverwaltung {
             DatabaseBuilder.type = "lite";
         }
 
-        private BuilderQueries scripts = new SqliteBuilderQueries();
+        private BuilderStatements scripts = new SqliteBuilderStatements();
 
         private const string databaseFile = "GradeDb.sqlite";
         public override void InitCompleteDatabase(bool resetDatabase = false) {
@@ -48,7 +48,7 @@ namespace Notenverwaltung {
 
         }
 
-        protected override void ExecuteQueries(string[] queryList) {
+        protected override void ExecuteStatements(string[] queryList) {
             SQLiteConnection dbConnection = OpenConnection();
             using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
                 string currentQuery = "";
@@ -71,8 +71,8 @@ namespace Notenverwaltung {
             }
             dbConnection.Close();
         }
-        protected override void ExecuteQuerySolo(string sql) {
-            ExecuteQueries(new string[] { sql });
+        protected override void ExecuteSoloStatement(string sql) {
+            ExecuteStatements(new string[] { sql });
         }
 
         public override SQLiteConnection OpenConnection() {
@@ -138,13 +138,13 @@ namespace Notenverwaltung {
             CreateAllTables();
         }
         protected override void DropAllTables() {
-            ExecuteQuerySolo(scripts.DropAllTables());
+            ExecuteSoloStatement(scripts.DropAllTables());
         }
         protected override void CreateAllTables() {
-            ExecuteQueries(scripts.CreateAllTables());
+            ExecuteStatements(scripts.CreateAllTables());
         }
         protected override void InsertDemoData() {
-            ExecuteQueries(scripts.InsertDemoData());
+            ExecuteStatements(scripts.InsertDemoData());
         }
 
         ////////////////////////////////////////////////////////////////////////////////////

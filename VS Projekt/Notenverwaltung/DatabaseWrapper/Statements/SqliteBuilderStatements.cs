@@ -2,7 +2,7 @@
 
 // https://learn.microsoft.com/en-us/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio?view=vs-2022
 namespace Notenverwaltung {
-    internal class SqliteBuilderQueries: BuilderQueries {
+    internal class SqliteBuilderStatements: BuilderStatements {
 
         public string[] CreateAllTables() {
             // the (20) will be ignored
@@ -29,13 +29,18 @@ namespace Notenverwaltung {
                 "PersonId INTEGER NOT NULL," +
                 "FOREIGN KEY(PersonId) REFERENCES Person(PersonId)" +
                 "); ";
+            string createBranchOfStudy = "CREATE TABLE IF NOT EXISTS Bildungsgang(" +
+                "BildungsgangId INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "Bezeichnung VARCHAR(50)" +
+                "); ";
             string createClass =
                 "CREATE TABLE IF NOT EXISTS Klasse(" +
                 "KlasseId INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "Bezeichnung VARCHAR(50) NOT NULL," +
                 "StartDatum DATE NOT NULL," +
                 "EndDatum DATE," +
-                "BildungsgangId INT NOT NULL" +
+                "BildungsgangId INT NOT NULL," +
+                "FOREIGN KEY(BildungsgangId) REFERENCES Bildungsgang(BildungsgangId)" +
                 "); ";
             string createStudentHasClass =
                 "CREATE TABLE IF NOT EXISTS Schueler_Hat_Klasse(" +
@@ -93,6 +98,7 @@ namespace Notenverwaltung {
                 createPerson,
                 createTeacher,
                 createStudent,
+                createBranchOfStudy,
                 createClass,
                 createStudentHasClass,
                 createSubject,
@@ -142,6 +148,11 @@ namespace Notenverwaltung {
                 "VALUES" +
                 "(1)," +
                 "(2); ";
+            string branchOfStudy =
+                "INSERT INTO Bildungsgang(Bezeichnung)" +
+                "VALUES" +
+                "('Systemintegration')," +
+                "('Anwendungsentwicklung'); ";
             string insertClass =
                 "INSERT INTO Klasse(Bezeichnung, StartDatum, BildungsgangId) " +
                 "VALUES " +
@@ -193,6 +204,7 @@ namespace Notenverwaltung {
                 person,
                 teacher,
                 student,
+                branchOfStudy,
                 insertClass,
                 studentHasClass,
                 subject,
