@@ -447,5 +447,9 @@ namespace Notenverwaltung {
                 + "';";
             return query;
         }
+
+        public void UpdateManyToManyRelations(Entity entity) {
+            
+        }
     }
 }

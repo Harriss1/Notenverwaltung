@@ -37,7 +37,8 @@ namespace Notenverwaltung {
             Person personRelationship = new Person();
             int personId = attributeToValuesDescription.GetRelationId(TableNotation.TeacherAttr.personId);
             if(personRelationship.FindById(personId) == null) {
-                throw new ArgumentException("Person mit ID=" + personId + " existiert nicht, Beziehung kann nicht erstellt werden");
+                throw new ArgumentException("Person mit ID=" + personId + " " +
+                    "existiert nicht, Beziehung kann nicht erstellt werden");
             }
             this.person = personRelationship;
 

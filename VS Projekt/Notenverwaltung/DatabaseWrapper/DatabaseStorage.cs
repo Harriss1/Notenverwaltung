@@ -41,6 +41,7 @@ namespace Notenverwaltung {
         /// <param name="entity"></param>
         void UpdateSingleEntity(Entity entity);
         AttributeToValuesDescription FindById(int id, Entity entity);
+        void UpdateManyToManyRelations(Entity entity);
         AttributeToValuesDescription FindByKeyValue(KeyValue keyValuePair, Entity entity);
     }
 }

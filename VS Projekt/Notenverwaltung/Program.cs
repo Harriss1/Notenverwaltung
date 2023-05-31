@@ -54,6 +54,12 @@ namespace Notenverwaltung {
             teacher.Print();
             teacher.Create();
             teacher.Print();
+
+            // TODO
+            //Teacher searchHanz = new Teacher();
+            //searchHanz.FindById(2);
+            //searchHanz.Print();
+
             BranchOfStudy kunstPaedagogik = new BranchOfStudy("Kunstpädagogik");
             kunstPaedagogik.Create();
             kunstPaedagogik.Print();
@@ -63,12 +69,13 @@ namespace Notenverwaltung {
             icd13.Print();
             Student student1 = new Student(searchHermine);
             student1.Create();
-            icd13.enrolledStudents.Add(student1);
-            icd13.Update();
+            // TODO
+            //icd13.enrolledStudents.Add(student1);
+            //icd13.Update();
 
-            foreach (Student student in icd13.enrolledStudents) {
-                student.Print();
-            }
+            //foreach (Student student in icd13.enrolledStudents) {
+            //    student.Print();
+            //}
 
 
             // xTODO Find by ID (done)
