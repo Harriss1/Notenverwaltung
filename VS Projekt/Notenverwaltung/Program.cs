@@ -15,14 +15,12 @@ namespace Notenverwaltung {
             System.Console.WriteLine("Datenbank Anbindung:");
 
             DatabaseBuilder databaseBuilder = new SqliteDatabaseBuilder();
-            //TODO refractor Reset DB as default is not great
             databaseBuilder.InitCompleteDatabase();
             DatabaseStorage databaseStorageObject = new SqliteDatabaseStorage();
             GlobalObjects.Add(databaseStorageObject, InterfaceListing.DatabaseStorage);
             
             DatabaseStorage storage = (DatabaseStorage) GlobalObjects.
                 Get(InterfaceListing.DatabaseStorage);
-            System.Console.WriteLine("ObjectInfo = " + storage.GetInfo());
 
             Person rolf = new Person("Rolf", "Müller", "2022-12-18", "Bielefeld", "blastermaxxer", "123");
             rolf.Create();
@@ -50,11 +48,21 @@ namespace Notenverwaltung {
             searchHermine.FindFirstByStringAttribute(new KeyValue(TableNames.PersonAttr.firstname, "Hermine"));
             searchHermine.Print();
 
+            Person newTeacher = new Person("Hanz", "Simmer", "1985-03-28", "Okthausen", "okto2000", "123");
+            newTeacher.Create();
+            Teacher teacher = new Teacher(newTeacher);
+            teacher.Print();
+            teacher.Create();
+            teacher.Print();
 
-            // TODO Find by ID (done)
-            // TODO Find By KeyValue - String (done)
-            // TODO Beziehungen
-            // TODO restliche Tabellen + Demodaten erstellen
+
+            // xTODO Find by ID (done)
+            // xTODO Find By KeyValue - String (done)
+            // xTODO Beziehungen (done)
+            // nicht Suchfunktion verfeinern, sie ist bereits ausreichend/nicht Tiel der Aufgabe!
+            // #TODO Attribute: DateTime und Integer!
+            // TODO Create + Demodaten Bildungsgang
+            // TODO Schüler einen Bildungsgang, Kurs, Klasse zuweisen
             // TODO Infos ausgeben zu jeden Objekt als ganze Zeile
             // TODO zweite Person erstellen, beide ändern, ausgeben, löschen
             System.Console.ReadLine();

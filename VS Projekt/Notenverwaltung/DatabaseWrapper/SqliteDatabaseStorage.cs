@@ -7,10 +7,6 @@ namespace Notenverwaltung {
     internal class SqliteDatabaseStorage : DatabaseStorage {
         private SqliteDatabaseBuilder builder = new SqliteDatabaseBuilder();
 
-                private string GetValue(List<KeyValue> keyValueList, string firstname) {
-            throw new NotImplementedException();
-        }
-
         public object FindTeacherById(string tableName, int id) {
             throw new System.NotImplementedException();
             //return null;
@@ -18,10 +14,6 @@ namespace Notenverwaltung {
 
         public object FindTeacherByLastname(string tableName, string lastname) {
             throw new System.NotImplementedException();
-        }
-
-        public string GetInfo() {
-            return "Info on this object";
         }
 
         public void UpdateSingleEntity(Entity entity) {
@@ -44,34 +36,6 @@ namespace Notenverwaltung {
         /// </summary>
         /// <param name="entity">Konkretisierung des Entity-Interfaces</param>
         /// <returns>Id der neu eingefügten Zeile</returns>
-        private static string CreateInsertStatement(Entity entity) {
-            #pragma warning disable CS0219 // Beispiel des erstellten Statements
-            string exampleStatement = 
-                "INSERT INTO person(Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +
-                "VALUES" +
-                "('Max', 'Mustermann', '2022-01-01', 'Bielefeld', 'user', 'user');";
-            #pragma warning restore CS0219
-
-            // Tabellen-Name
-            String insertQuery = "INSERT INTO " + entity.ToTableName() + "(";
-            // Tabellen-Spalten
-            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
-                insertQuery += keyValuePair.GetKey();
-                insertQuery += ", ";
-            }
-            insertQuery = insertQuery.Substring(0, insertQuery.Length - 2);
-            insertQuery += ") ";
-            // Werte der einzelnen Felder
-            insertQuery += "Values (";
-            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
-                insertQuery += "'" + keyValuePair.GetValue() + "'";
-                insertQuery += ", ";
-            }
-            insertQuery = insertQuery.Substring(0, insertQuery.Length - 2);
-            insertQuery += ");";
-
-            return insertQuery;
-        }
         private static string CreateInsertStatementByContainer(Entity entity) {
             #pragma warning disable CS0219 // Beispiel des erstellten Statements
             string exampleStatement =
@@ -83,7 +47,12 @@ namespace Notenverwaltung {
             // Tabellen-Name
             String insertQuery = "INSERT INTO " + entity.ToTableName() + "(";
             // Tabellen-Spalten
-            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
+            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetAttributes()) {
+                insertQuery += keyValuePair.GetKey();
+                insertQuery += ", ";
+            }
+            // INSERT INTO Lehre) Values);
+            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetRelations()) {
                 insertQuery += keyValuePair.GetKey();
                 insertQuery += ", ";
             }
@@ -91,8 +60,12 @@ namespace Notenverwaltung {
             insertQuery += ") ";
             // Werte der einzelnen Felder
             insertQuery += "Values (";
-            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
-                insertQuery += "'" + keyValuePair.GetValue() + "'";
+            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetAttributes()) {
+                insertQuery += "'" + keyValuePair.GetValueString() + "'";
+                insertQuery += ", ";
+            }
+            foreach (KeyValue relation in entity.ToAttributeValueDescription().GetRelations()) {
+                insertQuery += "'" + relation.GetValue() + "'";
                 insertQuery += ", ";
             }
             insertQuery = insertQuery.Substring(0, insertQuery.Length - 2);
@@ -123,10 +96,10 @@ namespace Notenverwaltung {
             updateStatement += "SET ";
 
             // Neue Feld-Werte setzen
-            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetList()) {
+            foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetAttributes()) {
                 updateStatement += keyValuePair.GetKey();
                 updateStatement += " = ";
-                updateStatement += "'" + keyValuePair.GetValue() + "'";
+                updateStatement += "'" + keyValuePair.GetValueString() + "'";
                 updateStatement += ", ";
             }
             updateStatement = updateStatement.Substring(0, updateStatement.Length - 2);
@@ -230,48 +203,6 @@ namespace Notenverwaltung {
             dbConnection.Close();
         }
 
-        /// <summary>
-        /// Erstellt eine Liste an Query-Antworten die das Resultat der
-        /// Datenbank-Abfrage enthalten.
-        /// "Select * From Lehrer Join Person ON Lehrer.PersonId = Person.PersonId;"
-        /// 
-        /// Nur als Referenz hier belassen (deprecated)
-        /// </summary>
-        private List<string> GetQueryReaderList(string query) {
-            List<string> readerContent = new List<string>();
-            SQLiteConnection dbConnection = builder.OpenConnection();
-            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
-                string currentQuery = "";
-                try {
-                    currentQuery = query;
-                    SQLiteCommand command = new SQLiteCommand(query, dbConnection);
-
-                    SQLiteDataReader rdr = command.ExecuteReader();
-                    while (rdr.Read()) {
-                        string foreName = (string)rdr["Vorname"];
-                        List<string> columnContent = new List<string>();
-                        for (int i = 0; i < rdr.FieldCount; i++) {
-                            columnContent.Add(rdr.GetValue(i).ToString());
-                        }
-                        Console.WriteLine("Response for query " + query + " = " + foreName);
-                        foreach (string column in columnContent) {
-                            Console.WriteLine("Alle Columns=" + column);
-                        }
-                        readerContent.Add(foreName);
-                    }
-                    transaction.Commit();
-                }
-                catch (Exception e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen.", e);
-                    Console.Error.WriteLine("Letzer Query=" + currentQuery);
-                    //throw;
-                }
-            }
-            dbConnection.Close();
-            return readerContent;
-        }
-
         public AttributeToValuesDescription FindById(int id, Entity entity) {
             string query = CreateFindByIdQuery(id, entity);
             AttributeToValuesDescription retrievedDescription =
@@ -317,7 +248,7 @@ namespace Notenverwaltung {
                         return null;
                     }
                     while (rdr.Read()) {
-                        foreach (KeyValue keyValuePair in entityDescription.GetList()) {
+                        foreach (KeyValue keyValuePair in entityDescription.GetAttributes()) {
                             string fieldContent = "";
                             object o = rdr[keyValuePair.GetKey()].GetType();
                             System.Console.WriteLine("Type = " + o.ToString());
@@ -331,7 +262,7 @@ namespace Notenverwaltung {
                             if (rdr[keyValuePair.GetKey()].GetType().ToString().Equals("System.Integer")) {
                                 fieldContent = rdr[keyValuePair.GetKey()].ToString();
                             }
-                            retrievedDescription.Add(keyValuePair.GetKey(), fieldContent);
+                            retrievedDescription.AddStringAttribute(keyValuePair.GetKey(), fieldContent);
                             debugContent.Add(fieldContent);
                         }
                     }
@@ -376,7 +307,7 @@ namespace Notenverwaltung {
             string query
                 = "SELECT * FROM " + entity.ToTableName()
                 + " WHERE " + keyValuePair.GetKey()
-                + " LIKE '" + keyValuePair.GetValue()
+                + " LIKE '" + keyValuePair.GetValueString()
                 + "';";
             return query;
         }

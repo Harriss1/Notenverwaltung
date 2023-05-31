@@ -15,8 +15,8 @@ namespace Notenverwaltung {
     /// </summary>
     internal class KeyValue {
         private string key;
-        private string value;
-        public KeyValue(string key, string value) {
+        private object value;
+        public KeyValue(string key, object value) {
             this.key = key;
             this.value = value;
         }
@@ -26,7 +26,10 @@ namespace Notenverwaltung {
         public string GetKey() {
             return key;
         }
-        public string GetValue() {
+        public string GetValueString() {
+            return (string)value;
+        }
+        public object GetValue() {
             return value;
         }
     }

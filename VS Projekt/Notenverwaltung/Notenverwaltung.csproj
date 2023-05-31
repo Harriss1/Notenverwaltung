@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="DatabaseWrapper\Entity.cs" />
     <Compile Include="DatabaseWrapper\AttributeToValuesDescription.cs" />
+    <Compile Include="Model\Teacher.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\TableNames.cs" />
     <Compile Include="DatabaseWrapper\DatabaseBuilder.cs" />

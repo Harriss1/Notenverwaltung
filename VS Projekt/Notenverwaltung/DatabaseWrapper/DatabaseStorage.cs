@@ -14,7 +14,6 @@ namespace Notenverwaltung {
         /// <returns></returns>
         object FindTeacherById(string tableName, int id);
         object FindTeacherByLastname(string tableName, string lastname);
-        string GetInfo();
 
         /// <summary>
         /// Löscht den Datensatz anhand seiner Id

@@ -8,6 +8,12 @@ namespace Notenverwaltung {
     internal class TableNames {
         public const string teacher = "Lehrer";
         public const string person = "Person";
+
+        public class TeacherAttr {
+            public const string teacherId = "LehrerId";
+            public const string personId = "PersonId";
+        }
+
         public class PersonAttr {
             //Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +
             public const string personId = "PersonId";

@@ -15,9 +15,7 @@ namespace Notenverwaltung {
 
         public string username;
         public string password;
-        public Person() {
-            id = -1;
-        }
+        public Person() : base() { }
         public Person(string firstname, string lastname, string birthdate, string birthplace, string username, string password) {
             this.firstname = firstname;
             this.lastname = lastname;
@@ -32,14 +30,14 @@ namespace Notenverwaltung {
         public override AttributeToValuesDescription ToAttributeValueDescription() {
             AttributeToValuesDescription attributeList 
                 = new AttributeToValuesDescription(TableNames.PersonAttr.personId, this.id);
-            attributeList.Add(TableNames.PersonAttr.firstname, firstname);
-            attributeList.Add(TableNames.PersonAttr.lastname, lastname);
+            attributeList.AddStringAttribute(TableNames.PersonAttr.firstname, firstname);
+            attributeList.AddStringAttribute(TableNames.PersonAttr.lastname, lastname);
 
-            attributeList.Add(TableNames.PersonAttr.birthplace, birthplace);
-            attributeList.Add(TableNames.PersonAttr.birthdate, birthdate);
+            attributeList.AddStringAttribute(TableNames.PersonAttr.birthplace, birthplace);
+            attributeList.AddStringAttribute(TableNames.PersonAttr.birthdate, birthdate);
 
-            attributeList.Add(TableNames.PersonAttr.username, username);
-            attributeList.Add(TableNames.PersonAttr.password, password);
+            attributeList.AddStringAttribute(TableNames.PersonAttr.username, username);
+            attributeList.AddStringAttribute(TableNames.PersonAttr.password, password);
 
             return attributeList;
         }

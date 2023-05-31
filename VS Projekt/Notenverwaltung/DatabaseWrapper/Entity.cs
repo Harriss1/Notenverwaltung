@@ -8,6 +8,7 @@ namespace Notenverwaltung {
         public int id { get; protected set; }
 
         public Entity() {
+            id = -1;
             storage = (DatabaseStorage)GlobalObjects.Get(InterfaceListing.DatabaseStorage);
         }
 
@@ -46,10 +47,20 @@ namespace Notenverwaltung {
 
         public string ToText() {
             string text = "";
-            for (int i = 0; i < ToAttributeValueDescription().GetList().Count; i++) {
-                text += "" + ToAttributeValueDescription().GetList()[i].GetKey() + "=";
-                text += ToAttributeValueDescription().GetList()[i].GetValue();
-                if (i < ToAttributeValueDescription().GetList().Count - 1) {
+            text += "ID=" + this.id;
+            text += " | ";
+
+            for (int i = 0; i < ToAttributeValueDescription().GetAttributes().Count; i++) {
+                text += "" + ToAttributeValueDescription().GetAttributes()[i].GetKey() + "=";
+                text += ToAttributeValueDescription().GetAttributes()[i].GetValueString();
+                if (i < ToAttributeValueDescription().GetAttributes().Count - 1) {
+                    text += " | ";
+                }
+            }
+            for (int i = 0; i < ToAttributeValueDescription().GetRelations().Count; i++) {
+                text += "" + ToAttributeValueDescription().GetRelations()[i].GetKey() + "=";
+                text += ToAttributeValueDescription().GetRelations()[i].GetValue();
+                if (i < ToAttributeValueDescription().GetRelations().Count - 1) {
                     text += " | ";
                 }
             }
