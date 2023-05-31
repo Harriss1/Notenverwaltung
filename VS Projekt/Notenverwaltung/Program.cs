@@ -61,8 +61,14 @@ namespace Notenverwaltung {
             Class icd13 = new Class("ICD 13", (new SimpleDate("2022-09-01")).ToDateTime, (new SimpleDate("2024-08-31")).ToDateTime, kunstPaedagogik);
             icd13.Create();
             icd13.Print();
+            Student student1 = new Student(searchHermine);
+            student1.Create();
+            icd13.enrolledStudents.Add(student1);
+            icd13.Update();
 
-            // TODO Schüler hat Klasse...
+            foreach (Student student in icd13.enrolledStudents) {
+                student.Print();
+            }
 
 
             // xTODO Find by ID (done)
@@ -71,11 +77,17 @@ namespace Notenverwaltung {
             // nicht Suchfunktion verfeinern, sie ist bereits ausreichend/nicht Tiel der Aufgabe!
             // xTODO Create + Demodaten Bildungsgang
             // xTODO Attribute: DateTime und Integer!
-            // TODO Schüler hat viele Klassen
-            // TODO Schüler einen Bildungsgang, Kurs, Klasse zuweisen
-            // TODO Kurs, Fach, Dozent, Note, Notentyp
+            // xTODO Schüler hat viele Klassen
+            // xTODO Klasse hat viele Schüler
+            // xTODO FindByOtherATtribute relatiert Many To Manybeziehungen.
+            // xTODO Schüler einen Bildungsgang, Kurs, Klasse zuweisen
+            // xTODO xKurs,  xDozent,
+            // TODO Dozent und Schülerhatklasse testen
+            // TODO Teilnehmer
+            // TODO Note, Notentyp
             // TODO Infos ausgeben zu jeden Objekt als ganze Zeile
-            // TODO zweite Person erstellen, beide ändern, ausgeben, löschen
+            // TODO Einzelne Schüler ansteuern/hinzufügen usw...
+            // Fach nicht machen
             System.Console.ReadLine();
 
         }

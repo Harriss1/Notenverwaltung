@@ -8,6 +8,7 @@ namespace Notenverwaltung {
     internal class Teacher : Entity {
         
         public Person person;
+        public List<Course> courses = new List<Course>();
 
         public Teacher() : base() { }
         public Teacher(Person person) {
@@ -18,7 +19,12 @@ namespace Notenverwaltung {
             AttributeToValuesDescription attributeList
                 = new AttributeToValuesDescription(TableNotation.TeacherAttr.teacherId, this.id);
             attributeList.AddRelation(TableNotation.TeacherAttr.personId, person.id);
-
+            ManyToManyKeyValue lecturer = new ManyToManyKeyValue(
+                    TableNotation.lecturer,
+                    TableNotation.LecturerAttr.teacherId,
+                    TableNotation.LecturerAttr.courseId,
+                    this.id);
+            attributeList.AddManyToManyRelation(lecturer);
             return attributeList;
         }
 
@@ -34,6 +40,21 @@ namespace Notenverwaltung {
                 throw new ArgumentException("Person mit ID=" + personId + " existiert nicht, Beziehung kann nicht erstellt werden");
             }
             this.person = personRelationship;
+
+            // Klassen setzen Viele-Zu-Viele (Ein Schüler kann auch mehrere Klassen haben)
+            courses.Clear();
+            foreach (ManyToManyKeyValue relationDescription
+                in attributeToValuesDescription.GetAllManyToManyRelations()) {
+                Course relatedCourse = new Course();
+                int courseId = relationDescription.GetForeignId();
+                if (relatedCourse.FindById(relationDescription.GetForeignId()) == null) {
+                    throw new ArgumentException("Kurs mit ID=" + courseId + " existiert nicht, Beziehung kann nicht erstellt werden");
+                }
+                else {
+                    courses.Add(relatedCourse);
+                    relatedCourse.Print();
+                }
+            }
         }
     }
 }

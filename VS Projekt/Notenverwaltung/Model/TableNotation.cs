@@ -12,10 +12,16 @@ namespace Notenverwaltung {
         public const string class_tablename = "Klasse";
         public const string branchOfStudy = "Bildungsgang";
         public const string studentHasClass = "Schueler_Hat_Klasse";
+        public const string course = "Kurs";
+        public const string lecturer = "Dozent";
 
         public class TeacherAttr {
             public const string teacherId = "LehrerId";
             public const string personId = "PersonId";
+        }
+        public class LecturerAttr {
+            public const string teacherId = "LehrerId";
+            public const string courseId = "KursId";
         }
         public class StudentAttr {
             public const string studentId = "SchuelerId";
@@ -36,6 +42,14 @@ namespace Notenverwaltung {
             public const string label = "Bezeichnung";
             public const string startDate = "StartDatum";
             public const string endDate = "EndDatum";
+        }
+
+        public class CourseAttr {
+            public const string courseId = "KursId";
+            public const string label = "Bezeichnung";
+            public const string startDate = "StartDatum";
+            public const string endDate = "EndDatum";
+
         }
         public class PersonAttr {
             //Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +

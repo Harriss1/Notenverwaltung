@@ -21,6 +21,11 @@ namespace Notenverwaltung {
             TransactUpdateStatement(statement);
         }
 
+        /// <summary>
+        /// Create new Entitity via Insert-Statement
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public int InsertSingleEntity(Entity entity) {
             string insertStatement = CreateInsertStatementByContainer(entity);
             int lastRowId = TransactInsertStatement(insertStatement);
@@ -347,6 +352,12 @@ namespace Notenverwaltung {
             string query = CreateFindByStringAttributeQuery(keyValueParam, entity);
             AttributeToValuesDescription retrievedDescription =
                 TransactFindQuery(query, entity);
+
+            ////////////////////// Viele-Zu-Viele Beziehungen
+            ///Append Many To Many Related Entities with this Method (modular)
+            retrievedDescription = SearchAndAppendManyToManyRelations(retrievedDescription, entity,
+                retrievedDescription.primaryKeyValue);
+
             return retrievedDescription;
         }
 

@@ -42,16 +42,14 @@ namespace Notenverwaltung {
 
             // Klassen setzen Viele-Zu-Viele (Ein Schüler kann auch mehrere Klassen haben)
             classes.Clear();
-            List<Class> relatedClasses = new List<Class>();
             foreach(ManyToManyKeyValue relationDescription 
                 in attributeToValuesDescription.GetAllManyToManyRelations()) {
                 Class relatedClass = new Class();
                 int classId = relationDescription.GetForeignId();
-                relatedClass.FindById(classId);
                 if (relatedClass.FindById(relationDescription.GetForeignId()) == null) {
                     throw new ArgumentException("Klasse mit ID=" + classId + " existiert nicht, Beziehung kann nicht erstellt werden");
                 } else {
-                    relatedClasses.Add(relatedClass);
+                    classes.Add(relatedClass);
                     relatedClass.Print();
                 }
             }

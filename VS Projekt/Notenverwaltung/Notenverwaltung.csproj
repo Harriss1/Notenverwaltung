@@ -68,6 +68,7 @@
     <Compile Include="DatabaseWrapper\AttributeToValuesDescription.cs" />
     <Compile Include="Model\BranchOfStudy.cs" />
     <Compile Include="Model\Class.cs" />
+    <Compile Include="Model\Course.cs" />
     <Compile Include="Model\Student.cs" />
     <Compile Include="Model\Teacher.cs" />
     <Compile Include="Model\Person.cs" />

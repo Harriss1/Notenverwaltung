@@ -9,6 +9,7 @@ namespace Notenverwaltung {
         public string label { get; set; }
         public DateTime startDate;
         public DateTime endDate;
+        public List<Student> enrolledStudents;
 
         public BranchOfStudy branchOfStudy;
         public Class() : base() { }
@@ -26,6 +27,13 @@ namespace Notenverwaltung {
             attributeList.AddDateTimeAttribute(TableNotation.ClassAttr.startDate, startDate);
             attributeList.AddDateTimeAttribute(TableNotation.ClassAttr.endDate, endDate);
             attributeList.AddRelation(TableNotation.ClassAttr.branchOfStudyId, branchOfStudy.id);
+
+            ManyToManyKeyValue studentHasClassRelation = new ManyToManyKeyValue(
+                    TableNotation.studentHasClass,
+                    TableNotation.StudentHasClassAttr.classId,
+                    TableNotation.StudentHasClassAttr.studentId,
+                    this.id);
+            attributeList.AddManyToManyRelation(studentHasClassRelation);
 
             return attributeList;
         }
@@ -47,6 +55,22 @@ namespace Notenverwaltung {
                 throw new ArgumentException("Bildungsgang mit ID=" + branchId + " existiert nicht, Beziehung kann nicht erstellt werden");
             }
             this.branchOfStudy = branchRelationship;
+
+            // Klassen setzen Viele-Zu-Viele (Ein Schüler kann auch mehrere Klassen haben)
+            enrolledStudents.Clear();
+            foreach (ManyToManyKeyValue relationDescription
+                in attributeToValuesDescription.GetAllManyToManyRelations()) {
+                Student student = new Student();
+                int studentId = relationDescription.GetForeignId();
+                if (student.FindById(relationDescription.GetForeignId()) == null) {
+                    throw new ArgumentException("Schüler mit ID=" + studentId + " existiert nicht, " +
+                        "Beziehung kann nicht erstellt werden");
+                }
+                else {
+                    enrolledStudents.Add(student);
+                    student.Print();
+                }
+            }
         }
     }
 }
