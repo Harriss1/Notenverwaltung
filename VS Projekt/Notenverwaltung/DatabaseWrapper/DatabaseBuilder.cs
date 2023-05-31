@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 
 namespace Notenverwaltung {
+    /// <summary>
+    /// Zuständig um eine Datenbank zu erstellen und deren
+    /// Tabellen, einschließlich Beziehungen zu kreiieren sowie zu löschen.
+    /// 
+    /// Desweitern werden einige Beispieldatensätze eingefügt.
+    /// </summary>
     internal abstract class DatabaseBuilder {
         public static String type;
         public static DatabaseBuilder retrieveCurrentDb() {

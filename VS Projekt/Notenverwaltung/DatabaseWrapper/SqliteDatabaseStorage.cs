@@ -61,8 +61,26 @@ namespace Notenverwaltung {
             // Werte der einzelnen Felder
             insertQuery += "Values (";
             foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetAttributes()) {
-                insertQuery += "'" + keyValuePair.GetValueString() + "'";
-                insertQuery += ", ";
+                bool useDefault = true;
+                if (keyValuePair.GetValue().GetType() == typeof(DateTime)) {
+                    DateTime dateTime = (DateTime)keyValuePair.GetValue();
+                    string textDate = (new SimpleDate(dateTime)).ToText;
+                    Console.WriteLine(" Datum f. DB:" + textDate);
+                    insertQuery += "'" + textDate + "'";
+                    insertQuery += ", ";
+                    useDefault = false;
+                }
+                if (keyValuePair.GetValue().GetType() == typeof(int)) {
+                    int number = (int)keyValuePair.GetValue();
+                    insertQuery += "'" + number + "'";
+                    insertQuery += ", ";
+                    useDefault = false;
+                }
+                if ( useDefault || 
+                    keyValuePair.GetValue().GetType() == typeof(string)) {
+                    insertQuery += "'" + keyValuePair.GetValueString() + "'";
+                    insertQuery += ", ";
+                }
             }
             foreach (KeyValue relation in entity.ToAttributeValueDescription().GetRelations()) {
                 insertQuery += "'" + relation.GetValue() + "'";
@@ -85,7 +103,7 @@ namespace Notenverwaltung {
         private static string CreateUpdateStatement(Entity entity) {
             #pragma warning disable CS0219 // Beispiel des erstellten Statements
             string exampleStatement =
-                "UPDATE Person" +
+                "UPDATE Person " +
                 "SET Vorname = 'neuer Vorname'," +
                 "Nachname = 'neuer Nachname'" +
                 "WHERE PersonId = 1;";
@@ -99,6 +117,10 @@ namespace Notenverwaltung {
             foreach (KeyValue keyValuePair in entity.ToAttributeValueDescription().GetAttributes()) {
                 updateStatement += keyValuePair.GetKey();
                 updateStatement += " = ";
+                object value = keyValuePair.GetValue();
+                if(value.GetType() == typeof(string)) {
+
+                }
                 updateStatement += "'" + keyValuePair.GetValueString() + "'";
                 updateStatement += ", ";
             }
@@ -252,18 +274,22 @@ namespace Notenverwaltung {
                             string fieldContent = "";
                             object o = rdr[keyValuePair.GetKey()].GetType();
                             System.Console.WriteLine("Type = " + o.ToString());
-                            if (rdr[keyValuePair.GetKey()].GetType().ToString().Equals("System.String")) {
+                            if (rdr[keyValuePair.GetKey()].GetType() == typeof(string)) {
                                 fieldContent = (string)rdr[keyValuePair.GetKey()];
+                                retrievedDescription.AddStringAttribute(keyValuePair.GetKey(), fieldContent);
+                                debugContent.Add(fieldContent);
                             }
-                            if (rdr[keyValuePair.GetKey()].GetType().ToString().Equals("System.DateTime")) {
+                            if (rdr[keyValuePair.GetKey()].GetType() == typeof(DateTime)) {
                                 DateTime dateTime = (DateTime)rdr[keyValuePair.GetKey()];
                                 fieldContent = dateTime.ToString("yyyy-MM-dd");
+                                retrievedDescription.AddDateTimeAttribute(keyValuePair.GetKey(), dateTime);
+                                debugContent.Add(fieldContent);
                             }
-                            if (rdr[keyValuePair.GetKey()].GetType().ToString().Equals("System.Integer")) {
+                            if (rdr[keyValuePair.GetKey()].GetType() == typeof(int)) {
                                 fieldContent = rdr[keyValuePair.GetKey()].ToString();
+                                retrievedDescription.AddStringAttribute(keyValuePair.GetKey(), fieldContent);
+                                debugContent.Add(fieldContent);
                             }
-                            retrievedDescription.AddStringAttribute(keyValuePair.GetKey(), fieldContent);
-                            debugContent.Add(fieldContent);
                         }
                     }
                     transaction.Commit();

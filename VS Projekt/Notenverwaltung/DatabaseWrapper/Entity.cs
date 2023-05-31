@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 
 namespace Notenverwaltung {
+    /// <summary>
+    /// Elternklasse um eine Entität einer Datenbank zu definieren
+    /// </summary>
     internal abstract class Entity {
         private DatabaseStorage storage;
 

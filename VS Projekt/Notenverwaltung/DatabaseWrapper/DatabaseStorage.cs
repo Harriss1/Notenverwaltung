@@ -5,8 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Notenverwaltung {
-    // Dependency Injection Naming-Konvention favorisiert kein "I"-Präfix
+    /// <summary>
+    /// Zuständig um Datensätze in einer fertigen Datenbank
+    /// mittels Create Read Update Delete Methoden zu manipulieren 
+    /// </summary>
 #pragma warning disable IDE1006 
+    // Dependency Injection Naming-Konvention favorisiert kein "I"-Präfix
     internal interface DatabaseStorage {
 #pragma warning restore IDE1006
         /// <summary>

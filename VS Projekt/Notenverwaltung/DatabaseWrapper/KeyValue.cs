@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Notenverwaltung {
 
     /// <summary>
-    /// Einfache Erstellung eines Key-Value Pairs
+    /// Einfache Erstellung eines Key-Value Paares
     /// Der einzig erlaubte Konstruktor nutzt Key als ersten Parameter, Value als zweiten
     /// da KeyValue Paare in diesen Programm einmal erstellte Paare
     /// an keiner Stelle mehr geändert werden soll, es soll
@@ -27,6 +27,9 @@ namespace Notenverwaltung {
             return key;
         }
         public string GetValueString() {
+            if (value.GetType() == typeof(DateTime)) {
+                return (new SimpleDate((DateTime)value)).ToText;
+            }
             return (string)value;
         }
         public object GetValue() {

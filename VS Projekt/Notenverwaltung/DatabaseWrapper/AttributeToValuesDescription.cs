@@ -35,6 +35,11 @@ namespace Notenverwaltung {
             }
             relationships.Add(new KeyValue(key, foreignKey));
         }
+
+        public void AddDateTimeAttribute(string key, DateTime date) {
+            keyValues.Add(new KeyValue(key, date));
+        }
+
         public int GetRelationId(string key) {
             if (key.Equals("id")) {
                 throw new ArgumentException("id wird nicht mittels" +
@@ -48,10 +53,10 @@ namespace Notenverwaltung {
             return -1;
         }
 
-        public string GetValue(string key) {
+        public object GetValue(string key) {
             foreach (KeyValue keyValuePair in keyValues) {
                 if (keyValuePair.GetKey().Equals(key)) {
-                    return keyValuePair.GetValueString();
+                    return keyValuePair.GetValue();
                 }
             }
             throw new ArgumentException("key ('" + key + "') existiert nicht");

@@ -10,17 +10,27 @@ namespace Notenverwaltung {
         public string firstname { get; set; }
         public string lastname;
 
-        public string birthdate;
+        public DateTime birthdate;
         public string birthplace;
 
         public string username;
         public string password;
         public Person() : base() { }
-        public Person(string firstname, string lastname, string birthdate, string birthplace, string username, string password) {
+        public Person(string firstname, string lastname, DateTime birthdate, string birthplace, string username, string password) {
             this.firstname = firstname;
             this.lastname = lastname;
 
             this.birthdate = birthdate;
+            this.birthplace = birthplace;
+
+            this.username = username;
+            this.password = password;
+        }
+        public Person(string firstname, string lastname, string birthdate, string birthplace, string username, string password) {
+            this.firstname = firstname;
+            this.lastname = lastname;
+
+            this.birthdate = (new SimpleDate(birthdate)).ToDateTime;
             this.birthplace = birthplace;
 
             this.username = username;
@@ -34,7 +44,7 @@ namespace Notenverwaltung {
             attributeList.AddStringAttribute(TableNames.PersonAttr.lastname, lastname);
 
             attributeList.AddStringAttribute(TableNames.PersonAttr.birthplace, birthplace);
-            attributeList.AddStringAttribute(TableNames.PersonAttr.birthdate, birthdate);
+            attributeList.AddDateTimeAttribute(TableNames.PersonAttr.birthdate, birthdate);
 
             attributeList.AddStringAttribute(TableNames.PersonAttr.username, username);
             attributeList.AddStringAttribute(TableNames.PersonAttr.password, password);
@@ -49,14 +59,14 @@ namespace Notenverwaltung {
         protected override void SetAttributesFromInternal(AttributeToValuesDescription attributeToValuesDescription) {
             this.id=attributeToValuesDescription.primaryKeyValue;
 
-            firstname=attributeToValuesDescription.GetValue(TableNames.PersonAttr.firstname);
-            lastname=attributeToValuesDescription.GetValue(TableNames.PersonAttr.lastname);
+            firstname=(string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.firstname);
+            lastname= (string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.lastname);
 
-            birthplace=attributeToValuesDescription.GetValue(TableNames.PersonAttr.birthplace);
-            birthdate=attributeToValuesDescription.GetValue(TableNames.PersonAttr.birthdate);
+            birthplace= (string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.birthplace);
+            birthdate= (DateTime)attributeToValuesDescription.GetValue(TableNames.PersonAttr.birthdate);
             
-            username=attributeToValuesDescription.GetValue(TableNames.PersonAttr.username);
-            password=attributeToValuesDescription.GetValue(TableNames.PersonAttr.password);
+            username= (string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.username);
+            password= (string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.password);
         }
     }
 }

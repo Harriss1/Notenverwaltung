@@ -60,8 +60,9 @@ namespace Notenverwaltung {
             // xTODO Find By KeyValue - String (done)
             // xTODO Beziehungen (done)
             // nicht Suchfunktion verfeinern, sie ist bereits ausreichend/nicht Tiel der Aufgabe!
+            // xTODO Create + Demodaten Bildungsgang
+
             // #TODO Attribute: DateTime und Integer!
-            // TODO Create + Demodaten Bildungsgang
             // TODO Schüler einen Bildungsgang, Kurs, Klasse zuweisen
             // TODO Infos ausgeben zu jeden Objekt als ganze Zeile
             // TODO zweite Person erstellen, beide ändern, ausgeben, löschen
