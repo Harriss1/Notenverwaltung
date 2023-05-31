@@ -54,6 +54,15 @@ namespace Notenverwaltung {
             teacher.Print();
             teacher.Create();
             teacher.Print();
+            BranchOfStudy kunstPaedagogik = new BranchOfStudy("Kunstpädagogik");
+            kunstPaedagogik.Create();
+            kunstPaedagogik.Print();
+
+            Class icd13 = new Class("ICD 13", (new SimpleDate("2022-09-01")).ToDateTime, (new SimpleDate("2024-08-31")).ToDateTime, kunstPaedagogik);
+            icd13.Create();
+            icd13.Print();
+
+            // TODO Schüler hat Klasse...
 
 
             // xTODO Find by ID (done)
@@ -61,8 +70,8 @@ namespace Notenverwaltung {
             // xTODO Beziehungen (done)
             // nicht Suchfunktion verfeinern, sie ist bereits ausreichend/nicht Tiel der Aufgabe!
             // xTODO Create + Demodaten Bildungsgang
+            // xTODO Attribute: DateTime und Integer!
 
-            // #TODO Attribute: DateTime und Integer!
             // TODO Schüler einen Bildungsgang, Kurs, Klasse zuweisen
             // TODO Infos ausgeben zu jeden Objekt als ganze Zeile
             // TODO zweite Person erstellen, beide ändern, ausgeben, löschen
