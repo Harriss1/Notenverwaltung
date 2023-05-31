@@ -277,19 +277,18 @@ namespace Notenverwaltung {
                             if (rdr[keyValuePair.GetKey()].GetType() == typeof(string)) {
                                 fieldContent = (string)rdr[keyValuePair.GetKey()];
                                 retrievedDescription.AddStringAttribute(keyValuePair.GetKey(), fieldContent);
-                                debugContent.Add(fieldContent);
                             }
                             if (rdr[keyValuePair.GetKey()].GetType() == typeof(DateTime)) {
                                 DateTime dateTime = (DateTime)rdr[keyValuePair.GetKey()];
                                 fieldContent = dateTime.ToString("yyyy-MM-dd");
                                 retrievedDescription.AddDateTimeAttribute(keyValuePair.GetKey(), dateTime);
-                                debugContent.Add(fieldContent);
                             }
-                            if (rdr[keyValuePair.GetKey()].GetType() == typeof(int)) {
+                            if (rdr[keyValuePair.GetKey()].GetType() == typeof(int)) {                                
                                 fieldContent = rdr[keyValuePair.GetKey()].ToString();
-                                retrievedDescription.AddStringAttribute(keyValuePair.GetKey(), fieldContent);
-                                debugContent.Add(fieldContent);
+                                int number = int.Parse(fieldContent);
+                                retrievedDescription.AddIntegerAttribute(keyValuePair.GetKey(), number);
                             }
+                            debugContent.Add(fieldContent);
                         }
                     }
                     transaction.Commit();

@@ -39,6 +39,9 @@ namespace Notenverwaltung {
         public void AddDateTimeAttribute(string key, DateTime date) {
             keyValues.Add(new KeyValue(key, date));
         }
+        internal void AddIntegerAttribute(string key, int number) {
+            keyValues.Add(new KeyValue(key, number));
+        }
 
         public int GetRelationId(string key) {
             if (key.Equals("id")) {
@@ -72,5 +75,6 @@ namespace Notenverwaltung {
         public List<KeyValue> GetRelations() {
             return relationships;
         }
+
     }
 }

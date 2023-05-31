@@ -32,6 +32,9 @@ namespace Notenverwaltung {
             }
             return (string)value;
         }
+        public int GetValueInt() {
+            return int.Parse(this.GetValueString());
+        }
         public object GetValue() {
             return value;
         }
