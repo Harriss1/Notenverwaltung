@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Notenverwaltung {
-    internal class TableNames {
+    internal class TableNotation {
         public const string teacher = "Lehrer";
         public const string person = "Person";
         public const string student = "Schueler";
         public const string class_tablename = "Klasse";
         public const string branchOfStudy = "Bildungsgang";
+        public const string studentHasClass = "Schueler_Hat_Klasse";
 
         public class TeacherAttr {
             public const string teacherId = "LehrerId";
@@ -19,6 +20,10 @@ namespace Notenverwaltung {
         public class StudentAttr {
             public const string studentId = "SchuelerId";
             public const string personId = "PersonId";
+        }
+        public class StudentHasClassAttr {
+            public const string studentId = "SchuelerId";
+            public const string classId = "KlasseId";
         }
         public class BranchOfStudyAttr {
             public const string branchOfStudyId = "BildungsgangId";

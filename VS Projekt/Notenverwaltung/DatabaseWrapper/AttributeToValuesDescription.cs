@@ -13,11 +13,13 @@ namespace Notenverwaltung {
         public int primaryKeyValue { get; private set; }
         public string primaryKey { get; private set; }
         private List<KeyValue> keyValues = new List<KeyValue>();
-        private List<KeyValue> relationships = new List<KeyValue>();
+        private List<KeyValue> singleRelationships = new List<KeyValue>();
+        private List<ManyToManyKeyValue> manyToManyRelationships = new List<ManyToManyKeyValue>();
         public AttributeToValuesDescription(string primaryKey, int primaryKeyValue) {
             this.primaryKey = primaryKey;
             this.primaryKeyValue = primaryKeyValue;
         }
+
         private AttributeToValuesDescription() {
             // Standard-Konstruktor soll nicht verwendet werden
         }
@@ -33,7 +35,7 @@ namespace Notenverwaltung {
                 throw new ArgumentException("id wird nicht mittels" +
                     "key value Paaren bearbeitet");
             }
-            relationships.Add(new KeyValue(key, foreignKey));
+            singleRelationships.Add(new KeyValue(key, foreignKey));
         }
 
         public void AddDateTimeAttribute(string key, DateTime date) {
@@ -48,7 +50,7 @@ namespace Notenverwaltung {
                 throw new ArgumentException("id wird nicht mittels" +
                     "key value Paaren bearbeitet");
             }
-            foreach (KeyValue keyValuePair in relationships) {
+            foreach (KeyValue keyValuePair in singleRelationships) {
                 if (keyValuePair.GetKey().Equals(key)) {
                     return (int)keyValuePair.GetValue();
                 }
@@ -73,7 +75,22 @@ namespace Notenverwaltung {
             return keyValues;
         }
         public List<KeyValue> GetRelations() {
-            return relationships;
+            return singleRelationships;
+        }
+
+        public void AddManyToManyRelation(ManyToManyKeyValue manyToManyKeyValue) {
+            manyToManyRelationships.Add(manyToManyKeyValue);
+        }
+        public object GetManyToManyRelation(string tableName) {
+            foreach (ManyToManyKeyValue relation in manyToManyRelationships) {
+                if (relation.GetTable().Equals(tableName)) {
+                    return relation;
+                }
+            }
+            return null;
+        }
+        public List<ManyToManyKeyValue> GetAllManyToManyRelations() {
+            return manyToManyRelationships;
         }
 
     }

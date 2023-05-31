@@ -21,27 +21,28 @@ namespace Notenverwaltung {
 
         public override AttributeToValuesDescription ToAttributeValueDescription() {
             AttributeToValuesDescription attributeList
-                = new AttributeToValuesDescription(TableNames.ClassAttr.classId, this.id);
-            attributeList.AddStringAttribute(TableNames.ClassAttr.label, label);
-            attributeList.AddDateTimeAttribute(TableNames.ClassAttr.startDate, startDate);
-            attributeList.AddDateTimeAttribute(TableNames.ClassAttr.endDate, endDate);
-            attributeList.AddRelation(TableNames.ClassAttr.branchOfStudyId, branchOfStudy.id);
+                = new AttributeToValuesDescription(TableNotation.ClassAttr.classId, this.id);
+            attributeList.AddStringAttribute(TableNotation.ClassAttr.label, label);
+            attributeList.AddDateTimeAttribute(TableNotation.ClassAttr.startDate, startDate);
+            attributeList.AddDateTimeAttribute(TableNotation.ClassAttr.endDate, endDate);
+            attributeList.AddRelation(TableNotation.ClassAttr.branchOfStudyId, branchOfStudy.id);
 
             return attributeList;
         }
 
         public override string ToTableName() {
-            return TableNames.class_tablename;
+            return TableNotation.class_tablename;
         }
 
         protected override void SetAttributesFromInternal(AttributeToValuesDescription attributeToValuesDescription) {
             this.id = attributeToValuesDescription.primaryKeyValue;
 
-            label = (string)attributeToValuesDescription.GetValue(TableNames.ClassAttr.label);
-            startDate = (DateTime)attributeToValuesDescription.GetValue(TableNames.ClassAttr.startDate);
-            endDate = (DateTime)attributeToValuesDescription.GetValue(TableNames.ClassAttr.endDate);
+            label = (string)attributeToValuesDescription.GetValue(TableNotation.ClassAttr.label);
+            startDate = (DateTime)attributeToValuesDescription.GetValue(TableNotation.ClassAttr.startDate);
+            endDate = (DateTime)attributeToValuesDescription.GetValue(TableNotation.ClassAttr.endDate);
+            // Viele-1-Beziehung (Ein Bildungsgang hat mehrere Klassen, eine Klasse hat einen Bildungsgang)
             BranchOfStudy branchRelationship = new BranchOfStudy();
-            int branchId = attributeToValuesDescription.GetRelationId(TableNames.ClassAttr.branchOfStudyId);
+            int branchId = attributeToValuesDescription.GetRelationId(TableNotation.ClassAttr.branchOfStudyId);
             if (branchRelationship.FindById(branchId) == null) {
                 throw new ArgumentException("Bildungsgang mit ID=" + branchId + " existiert nicht, Beziehung kann nicht erstellt werden");
             }

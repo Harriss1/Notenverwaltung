@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseWrapper\ManyToManyKeyValue.cs" />
     <Compile Include="DatabaseWrapper\SimpleDate.cs" />
     <Compile Include="DatabaseWrapper\Entity.cs" />
     <Compile Include="DatabaseWrapper\AttributeToValuesDescription.cs" />
@@ -70,7 +71,7 @@
     <Compile Include="Model\Student.cs" />
     <Compile Include="Model\Teacher.cs" />
     <Compile Include="Model\Person.cs" />
-    <Compile Include="Model\TableNames.cs" />
+    <Compile Include="Model\TableNotation.cs" />
     <Compile Include="DatabaseWrapper\DatabaseBuilder.cs" />
     <Compile Include="DatabaseWrapper\DatabaseStorage.cs" />
     <Compile Include="DependencyInjection\GlobalObjects.cs" />

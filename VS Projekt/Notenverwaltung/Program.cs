@@ -45,7 +45,7 @@ namespace Notenverwaltung {
             Person searchHermine = new Person();
             searchHermine.FindById(6);
             searchHermine.Print();
-            searchHermine.FindFirstByStringAttribute(new KeyValue(TableNames.PersonAttr.firstname, "Hermine"));
+            searchHermine.FindFirstByStringAttribute(new KeyValue(TableNotation.PersonAttr.firstname, "Hermine"));
             searchHermine.Print();
 
             Person newTeacher = new Person("Hanz", "Simmer", "1985-03-28", "Okthausen", "okto2000", "123");
@@ -71,8 +71,9 @@ namespace Notenverwaltung {
             // nicht Suchfunktion verfeinern, sie ist bereits ausreichend/nicht Tiel der Aufgabe!
             // xTODO Create + Demodaten Bildungsgang
             // xTODO Attribute: DateTime und Integer!
-
+            // TODO Schüler hat viele Klassen
             // TODO Schüler einen Bildungsgang, Kurs, Klasse zuweisen
+            // TODO Kurs, Fach, Dozent, Note, Notentyp
             // TODO Infos ausgeben zu jeden Objekt als ganze Zeile
             // TODO zweite Person erstellen, beide ändern, ausgeben, löschen
             System.Console.ReadLine();

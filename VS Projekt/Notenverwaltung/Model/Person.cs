@@ -39,34 +39,34 @@ namespace Notenverwaltung {
 
         public override AttributeToValuesDescription ToAttributeValueDescription() {
             AttributeToValuesDescription attributeList 
-                = new AttributeToValuesDescription(TableNames.PersonAttr.personId, this.id);
-            attributeList.AddStringAttribute(TableNames.PersonAttr.firstname, firstname);
-            attributeList.AddStringAttribute(TableNames.PersonAttr.lastname, lastname);
+                = new AttributeToValuesDescription(TableNotation.PersonAttr.personId, this.id);
+            attributeList.AddStringAttribute(TableNotation.PersonAttr.firstname, firstname);
+            attributeList.AddStringAttribute(TableNotation.PersonAttr.lastname, lastname);
 
-            attributeList.AddStringAttribute(TableNames.PersonAttr.birthplace, birthplace);
-            attributeList.AddDateTimeAttribute(TableNames.PersonAttr.birthdate, birthdate);
+            attributeList.AddStringAttribute(TableNotation.PersonAttr.birthplace, birthplace);
+            attributeList.AddDateTimeAttribute(TableNotation.PersonAttr.birthdate, birthdate);
 
-            attributeList.AddStringAttribute(TableNames.PersonAttr.username, username);
-            attributeList.AddStringAttribute(TableNames.PersonAttr.password, password);
+            attributeList.AddStringAttribute(TableNotation.PersonAttr.username, username);
+            attributeList.AddStringAttribute(TableNotation.PersonAttr.password, password);
 
             return attributeList;
         }
 
         public override string ToTableName() {
-            return TableNames.person;
+            return TableNotation.person;
         }
 
         protected override void SetAttributesFromInternal(AttributeToValuesDescription attributeToValuesDescription) {
             this.id=attributeToValuesDescription.primaryKeyValue;
 
-            firstname=(string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.firstname);
-            lastname= (string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.lastname);
+            firstname=(string)attributeToValuesDescription.GetValue(TableNotation.PersonAttr.firstname);
+            lastname= (string)attributeToValuesDescription.GetValue(TableNotation.PersonAttr.lastname);
 
-            birthplace= (string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.birthplace);
-            birthdate= (DateTime)attributeToValuesDescription.GetValue(TableNames.PersonAttr.birthdate);
+            birthplace= (string)attributeToValuesDescription.GetValue(TableNotation.PersonAttr.birthplace);
+            birthdate= (DateTime)attributeToValuesDescription.GetValue(TableNotation.PersonAttr.birthdate);
             
-            username= (string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.username);
-            password= (string)attributeToValuesDescription.GetValue(TableNames.PersonAttr.password);
+            username= (string)attributeToValuesDescription.GetValue(TableNotation.PersonAttr.username);
+            password= (string)attributeToValuesDescription.GetValue(TableNotation.PersonAttr.password);
         }
     }
 }

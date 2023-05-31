@@ -229,9 +229,109 @@ namespace Notenverwaltung {
             string query = CreateFindByIdQuery(id, entity);
             AttributeToValuesDescription retrievedDescription =
                 TransactFindQuery(query, entity);
+
+            ////////////////////// Viele-Zu-Viele Beziehungen
+            ///Append Many To Many Related Entities with this Method (modular)
+            retrievedDescription = SearchAndAppendManyToManyRelations(retrievedDescription, entity, id);
+            
             return retrievedDescription;
         }
 
+        private AttributeToValuesDescription SearchAndAppendManyToManyRelations(AttributeToValuesDescription retrievedDescription, Entity entity, int id) {
+            if (entity.ToAttributeValueDescription().GetAllManyToManyRelations().Count > 0) {
+                foreach (ManyToManyKeyValue relationDescription 
+                    in entity.ToAttributeValueDescription().GetAllManyToManyRelations()) {
+                    string tablename = relationDescription.GetTable();
+                    string query = CreateManyToManySearchQuery(tablename, entity, id);
+                    string primaryColumn = relationDescription.GetOwnColumn();
+                    string secondaryColumn = relationDescription.GetForeignColumn();
+                    retrievedDescription = TransactManyToManySearch(retrievedDescription, query, 
+                        tablename, primaryColumn, secondaryColumn);
+                }
+            }            
+            return retrievedDescription;
+        }
+
+        private AttributeToValuesDescription TransactManyToManySearch(
+                        AttributeToValuesDescription retrievedDescription,
+                        string query,
+                        string tablename,
+                        string primaryColumn, 
+                        string secondaryColumn) {
+            
+            SQLiteConnection dbConnection = builder.OpenConnection();
+
+            builder.OpenConnection();
+            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                try {
+                    SQLiteCommand command = new SQLiteCommand(query, dbConnection);
+
+                    SQLiteDataReader rdr = command.ExecuteReader();
+                    if (!rdr.HasRows) {
+                        throw new InvalidDataException("Es wurde keine Datensätze gefunden");
+                    }
+                    while (rdr.Read()) {
+                        int primaryColumnId = -1;
+                        int secondaryColumnId = -1;
+                        if (rdr[primaryColumn].GetType() == typeof(int)
+                            && rdr[secondaryColumn].GetType() == typeof(int)) {
+                            primaryColumnId = (int)rdr[primaryColumn];
+                            secondaryColumnId = (int)rdr[secondaryColumn];
+                        }
+                        else {
+                            throw new InvalidDataException("Many-To-Many Tabellen benötigen " +
+                                "zwei Spalten jeweils mit Integer befüllt");
+                        }
+                        ManyToManyKeyValue relationDescription = new ManyToManyKeyValue(
+                            tablename,
+                            primaryColumn,
+                            secondaryColumn,
+                            secondaryColumnId
+                            );
+                        retrievedDescription.AddManyToManyRelation(relationDescription);
+                        /// Okay Problem erkannt:
+                        /// In der AttributeToValueDescription hätte ich auf keinen Fall
+                        /// Model-Objekte ablegen dürfen! Dann fehlt nämlich der eindeutige
+                        /// Tabellen/Spalten-Bezeichner.
+                    }
+                    transaction.Commit();
+                }
+                catch (System.FormatException e) {
+                    transaction.Rollback();
+                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                    Console.Error.WriteLine("Letzer Query=" + query);
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.Error.WriteLine("Es existert ein falscher Datumswert der Datenbank");
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                }
+                catch (System.InvalidCastException e) {
+                    transaction.Rollback();
+                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                    Console.Error.WriteLine("Letzer Query=" + query);
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.Error.WriteLine("Format wurde falsch konvertiert (z.B. Date nicht in String umgewandelt)");
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                    Console.Error.WriteLine("Letzer Query=" + query);
+                    //throw;
+                }
+            }
+            dbConnection.Close();
+            return retrievedDescription;
+        }
+
+        private string CreateManyToManySearchQuery(string tablename, Entity entity, int id) {
+            string query = "SELECT * FROM " + tablename
+                + " WHERE " + entity.ToAttributeValueDescription().primaryKey
+                + " = " + id
+                + ";";
+            return query;
+        }
         private string CreateFindByIdQuery(int id, Entity entity) {
             //string exampleQueryRelation = "Select * From Lehrer Join Person ON Lehrer.PersonId = Person.PersonId;";
             //string exampleQuery = "Select * From Person WHERE PersonId =99;";
@@ -298,7 +398,7 @@ namespace Notenverwaltung {
                     Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
                     Console.Error.WriteLine("Letzer Query=" + query);
                     Console.BackgroundColor = ConsoleColor.Red;
-                    Console.Error.WriteLine("Es wurde ein Datumswert falsch in die Datenbank geschrieben!");
+                    Console.Error.WriteLine("Es existert ein falscher Datumswert der Datenbank");
                     Console.BackgroundColor = ConsoleColor.Black;
 
                 }
