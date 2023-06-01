@@ -5,7 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Notenverwaltung {
+    /// <summary>
+    /// Tabellennamen als Hauptattribute und Attributnamen einzelner Tabellen
+    /// 
+    /// TODO Sollte ein Struct sein?
+    /// </summary>
     internal class TableNotation {
+        
         public const string teacher = "Lehrer";
         public const string person = "Person";
         public const string student = "Schueler";
@@ -14,7 +20,22 @@ namespace Notenverwaltung {
         public const string studentHasClass = "Schueler_Hat_Klasse";
         public const string course = "Kurs";
         public const string lecturer = "Dozent";
+        public const string subject = "Fach";
+        public const string participant = "Teilnehmer";
 
+        /////////////////////////////////////////////////////////////
+        /// Attribute einzelner Tabellen
+        /// 
+        public class PersonAttr {
+            //Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +
+            public const string personId = "PersonId";
+            public const string firstname = "Vorname";
+            public const string lastname = "Nachname";
+            public const string birthdate = "Geburtsdatum";
+            public const string birthplace = "Geburtsort";
+            public const string username = "Benutzername";
+            public const string password = "Passwort";
+        }
         public class TeacherAttr {
             public const string teacherId = "LehrerId";
             public const string personId = "PersonId";
@@ -46,20 +67,22 @@ namespace Notenverwaltung {
 
         public class CourseAttr {
             public const string courseId = "KursId";
+            public const string subjectId = "FachId";
             public const string label = "Bezeichnung";
             public const string startDate = "StartDatum";
             public const string endDate = "EndDatum";
 
         }
-        public class PersonAttr {
-            //Vorname, Nachname, Geburtsdatum, Geburtsort, Benutzername, Passwort)" +
-            public const string personId = "PersonId";
-            public const string firstname = "Vorname";
-            public const string lastname = "Nachname";
-            public const string birthdate = "Geburtsdatum";
-            public const string birthplace = "Geburtsort";
-            public const string username = "Benutzername";
-            public const string password = "Passwort";
+        public class SubjectAttr {
+            public const string subjectId = "FachId";
+            public const string label = "Bezeichnung";
+            public const string acronym = "Akronym";
+
+        }
+        public class ParticipantAttr {
+            public const string participantId = "TeilnehmerId";
+            public const string courseId = "KursId";
+            public const string studentId = "SchuelerId";
         }
 
 

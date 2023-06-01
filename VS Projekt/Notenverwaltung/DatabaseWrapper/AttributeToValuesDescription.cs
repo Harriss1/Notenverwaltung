@@ -10,10 +10,11 @@ namespace Notenverwaltung {
     /// Beschreibt seperat den PrimaryKey und dessen Wert
     /// </summary>
     internal class AttributeToValuesDescription {
-        public int primaryKeyValue { get; private set; }
+        public int primaryKeyValue;
         public string primaryKey { get; private set; }
         private List<KeyValue> keyValues = new List<KeyValue>();
         private List<KeyValue> singleRelationships = new List<KeyValue>();
+        private List<OneToXRelationKeyValue> oneToXRelationships = new List<OneToXRelationKeyValue>();
         private List<ManyToManyKeyValue> manyToManyRelationships = new List<ManyToManyKeyValue>();
         public AttributeToValuesDescription(string primaryKey, int primaryKeyValue) {
             this.primaryKey = primaryKey;
@@ -30,6 +31,27 @@ namespace Notenverwaltung {
             }
             keyValues.Add(new KeyValue(key, value));
         }
+
+        internal void AddOneToXRelation(OneToXRelationKeyValue toOneKeyValue) {
+            if (GetOneToXRelation(toOneKeyValue.GetForeignTable()) != null) {
+                throw new ArgumentException("Beziehung wurde bereits definiert für Tabelle=" + toOneKeyValue.GetForeignTable());
+            }
+            oneToXRelationships.Add(toOneKeyValue);
+        }
+        public List<OneToXRelationKeyValue> GetOneToXRelations() {
+            return oneToXRelationships;
+        }
+
+        internal OneToXRelationKeyValue GetOneToXRelation(string foreignTablename) {
+            foreach (OneToXRelationKeyValue relationDescription in oneToXRelationships) {
+                if (relationDescription.GetForeignTable().Equals(foreignTablename)) {
+                    return relationDescription;
+                }
+            }
+            return null;
+        }
+
+        [Obsolete]
         public void AddRelation(string key, int foreignKey) {
             if (key.Equals("id")) {
                 throw new ArgumentException("id wird nicht mittels" +
@@ -44,7 +66,7 @@ namespace Notenverwaltung {
         internal void AddIntegerAttribute(string key, int number) {
             keyValues.Add(new KeyValue(key, number));
         }
-
+        [Obsolete]
         public int GetRelationId(string key) {
             if (key.Equals("id")) {
                 throw new ArgumentException("id wird nicht mittels" +
@@ -74,6 +96,7 @@ namespace Notenverwaltung {
         public List<KeyValue> GetAttributes() {
             return keyValues;
         }
+        [Obsolete]
         public List<KeyValue> GetRelations() {
             return singleRelationships;
         }
@@ -83,7 +106,7 @@ namespace Notenverwaltung {
         }
         public object GetManyToManyRelation(string tableName) {
             foreach (ManyToManyKeyValue relation in manyToManyRelationships) {
-                if (relation.GetTable().Equals(tableName)) {
+                if (relation.GetTablename().Equals(tableName)) {
                     return relation;
                 }
             }

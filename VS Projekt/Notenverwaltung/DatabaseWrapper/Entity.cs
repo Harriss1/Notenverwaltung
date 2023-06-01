@@ -6,6 +6,10 @@ namespace Notenverwaltung {
     /// </summary>
     internal abstract class Entity {
         private DatabaseStorage storage;
+        /// <summary>
+        /// Parameter muss auf Wahr gesetzt werden, falls neue Beziehungen hinzukommen.
+        /// </summary>
+        protected bool isNewManyToManyRelationAdded = false;
 
         // Primary Key
         public int id { get; protected set; }
@@ -34,60 +38,52 @@ namespace Notenverwaltung {
 
         public Entity Create() {
             int lastRowId = storage.InsertSingleEntity(this);
-            this.id = lastRowId;
-            return this;
+            this.id = lastRowId;            
+
+            // Mittels FindById werden die Beziehungen der Objekte aktualisiert
+            // Dies müsste korrigiert werden, da man es da nicht vermutet
+            return FindById(lastRowId, "Quelle: Create");
         }
 
         public Entity Update() {
             storage.UpdateSingleEntity(this);
-            return this;
+
+            // Many-To-Many-Beziehungen in Datenbank einpflegen, falls vorhanden
+            if (this.isNewManyToManyRelationAdded) {
+                // Wir können nur Beziehungen hinzufügen, zur Zeit sind
+                // keine Beziehungen löschbar
+                storage.InsertManyToManyRelationsIfMissing(this);
+            }
+            // Mittels FindById werden die Beziehungen der Objekte aktualisiert
+            // Dies müsste korrigiert werden, da man es da nicht vermutet
+            return FindById(this.id);
         }
 
         public void Delete() {
             storage.Delete(this);
             id = -1;
         }
-
-        public string ToText() {
-            string text = "";
-            text += "ID=" + this.id;
-            text += " | ";
-
-            for (int i = 0; i < ToAttributeValueDescription().GetAttributes().Count; i++) {
-                text += "" + ToAttributeValueDescription().GetAttributes()[i].GetKey() + "=";
-                text += ToAttributeValueDescription().GetAttributes()[i].GetValueString();
-                if (i < ToAttributeValueDescription().GetAttributes().Count - 1) {
-                    text += " | ";
-                }
-            }
-            for (int i = 0; i < ToAttributeValueDescription().GetRelations().Count; i++) {
-                text += "" + ToAttributeValueDescription().GetRelations()[i].GetKey() + "=";
-                text += ToAttributeValueDescription().GetRelations()[i].GetValue();
-                if (i < ToAttributeValueDescription().GetRelations().Count - 1) {
-                    text += " | ";
-                }
-            }
-            text += "";
-            return text;
+        private Entity FindById(int primaryKey, string debugMessage) {
+            System.Console.WriteLine(debugMessage);
+            return this.FindById(primaryKey);
         }
-        /// <summary>
-        /// Konsolenausgabe: Tabellenname + Inhalte der Felder der einzelnen Entität
-        /// </summary>
-        public void Print() {
-            System.Console.WriteLine(this.ToTableName() + ": " + this.ToText());
-        }
-
-        public Entity FindFirstByStringAttribute(KeyValue keyValuePair) {
-            AttributeToValuesDescription retrievedContent = storage.FindByKeyValue(keyValuePair, this);
+        public Entity FindById(int primaryKey) {
+            System.Console.WriteLine("FindById id=" + primaryKey);
+            if (primaryKey <= -1) {
+                throw new System.ArgumentOutOfRangeException("id value=" + primaryKey);
+            }
+            AttributeToValuesDescription retrievedContent = storage.FindById(primaryKey, this);
             if (retrievedContent == null) {
                 // Falls kein Datensatz gefunden wird
                 return null;
             }
+            retrievedContent.primaryKeyValue = primaryKey;
             SetAttributesFromInternal(retrievedContent);
             return this;
         }
-        public Entity FindById(int id) {
-            AttributeToValuesDescription retrievedContent = storage.FindById(id, this);
+
+        public Entity FindFirstByStringAttribute(KeyValue keyValuePair) {
+            AttributeToValuesDescription retrievedContent = storage.FindByKeyValue(keyValuePair, this);
             if (retrievedContent == null) {
                 // Falls kein Datensatz gefunden wird
                 return null;
@@ -104,6 +100,36 @@ namespace Notenverwaltung {
         }
         public List<Entity> Search(string key, string value) {
             return null;
+        }
+        /// <summary>
+        /// Konsolenausgabe: Tabellenname + Inhalte der Felder der einzelnen Entität
+        /// </summary>
+        public void Print() {
+            System.Console.WriteLine(this.ToTableName() + ": " + this.ToText());
+        }
+
+
+        public string ToText() {
+            string text = "";
+            text += "ID=" + this.id;
+            text += " | ";
+
+            for (int i = 0; i < ToAttributeValueDescription().GetAttributes().Count; i++) {
+                text += "" + ToAttributeValueDescription().GetAttributes()[i].GetKey() + "=";
+                text += ToAttributeValueDescription().GetAttributes()[i].GetValueString();
+                if (i < ToAttributeValueDescription().GetAttributes().Count - 1) {
+                    text += " | ";
+                }
+            }
+            for (int i = 0; i < ToAttributeValueDescription().GetOneToXRelations().Count; i++) {
+                text += " | " + ToAttributeValueDescription().GetOneToXRelations()[i].GetOwnForeignColumnName() + "=";
+                text += ToAttributeValueDescription().GetOneToXRelations()[i].GetForeignId();
+                if (i < ToAttributeValueDescription().GetOneToXRelations().Count - 1) {
+                    text += " | ";
+                }
+            }
+            text += "";
+            return text;
         }
     }
 }

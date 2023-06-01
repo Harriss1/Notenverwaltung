@@ -45,8 +45,17 @@ namespace Notenverwaltung {
             Person searchHermine = new Person();
             searchHermine.FindById(6);
             searchHermine.Print();
-            searchHermine.FindFirstByStringAttribute(new KeyValue(TableNotation.PersonAttr.firstname, "Hermine"));
+            //searchHermine.FindFirstByStringAttribute(new KeyValue(TableNotation.PersonAttr.firstname, "Hermine"));
             searchHermine.Print();
+            Person klaus = new Person("Klaus", "Müller", "2005-04-23", "Ulm", "knasti", "admin");
+            klaus.Create();
+            klaus.Print();
+            Student hermineStudent = new Student(klaus);
+            hermineStudent.Create();
+            hermineStudent.Print();
+            Student findStudent = new Student();
+            findStudent.FindById(hermineStudent.id);
+            findStudent.Print();
 
             Person newTeacher = new Person("Hanz", "Simmer", "1985-03-28", "Okthausen", "okto2000", "123");
             newTeacher.Create();
@@ -56,9 +65,9 @@ namespace Notenverwaltung {
             teacher.Print();
 
             // TODO
-            //Teacher searchHanz = new Teacher();
-            //searchHanz.FindById(2);
-            //searchHanz.Print();
+            Teacher searchHanz = new Teacher();
+            searchHanz.FindById(2);
+            searchHanz.Print();
 
             BranchOfStudy kunstPaedagogik = new BranchOfStudy("Kunstpädagogik");
             kunstPaedagogik.Create();
@@ -67,8 +76,27 @@ namespace Notenverwaltung {
             Class icd13 = new Class("ICD 13", (new SimpleDate("2022-09-01")).ToDateTime, (new SimpleDate("2024-08-31")).ToDateTime, kunstPaedagogik);
             icd13.Create();
             icd13.Print();
+            System.Console.WriteLine("########################### Klassenerstellung Ende###");
             Student student1 = new Student(searchHermine);
             student1.Create();
+            student1.Print();
+            student1.AddToClass(icd13);
+            student1.Print();
+            student1.Update();
+            Student findTheFirstOne = new Student();
+            findTheFirstOne.FindById(student1.id);
+            findTheFirstOne.Print();
+            findTheFirstOne.person.Print();
+            foreach(Class hisClass in findTheFirstOne.classes) {
+                hisClass.Print();
+            }
+            Subject mathSubject = new Subject("Mathematik Grundlagen", "MA");
+            mathSubject.Create();
+            mathSubject.Print();
+            Course math = new Course("Mathe 2", "2022-09-01", "2023-03-31", mathSubject);
+            math.Create();
+            math.Print();
+            math.subject.Print();
             // TODO
             //icd13.enrolledStudents.Add(student1);
             //icd13.Update();

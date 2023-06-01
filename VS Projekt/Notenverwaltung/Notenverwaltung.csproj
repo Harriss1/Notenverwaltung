@@ -66,10 +66,12 @@
     <Compile Include="DatabaseWrapper\SimpleDate.cs" />
     <Compile Include="DatabaseWrapper\Entity.cs" />
     <Compile Include="DatabaseWrapper\AttributeToValuesDescription.cs" />
+    <Compile Include="DatabaseWrapper\OneToXRelationKeyValue.cs" />
     <Compile Include="Model\BranchOfStudy.cs" />
     <Compile Include="Model\Class.cs" />
     <Compile Include="Model\Course.cs" />
     <Compile Include="Model\Student.cs" />
+    <Compile Include="Model\Subject.cs" />
     <Compile Include="Model\Teacher.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\TableNotation.cs" />

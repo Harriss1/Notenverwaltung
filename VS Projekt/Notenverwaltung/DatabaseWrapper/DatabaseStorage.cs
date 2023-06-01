@@ -13,14 +13,6 @@ namespace Notenverwaltung {
     // Dependency Injection Naming-Konvention favorisiert kein "I"-Präfix
     internal interface DatabaseStorage {
 #pragma warning restore IDE1006
-        /// <summary>
-        /// Findet einen Lehrer anhand seiner Id in der Tabelle.
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        object FindTeacherById(string tableName, int id);
-        object FindTeacherByLastname(string tableName, string lastname);
 
         /// <summary>
         /// Löscht den Datensatz anhand seiner Id
@@ -41,7 +33,7 @@ namespace Notenverwaltung {
         /// <param name="entity"></param>
         void UpdateSingleEntity(Entity entity);
         AttributeToValuesDescription FindById(int id, Entity entity);
-        void UpdateManyToManyRelations(Entity entity);
         AttributeToValuesDescription FindByKeyValue(KeyValue keyValuePair, Entity entity);
+        void InsertManyToManyRelationsIfMissing(Entity entity);
     }
 }

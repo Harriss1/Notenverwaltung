@@ -9,21 +9,24 @@ namespace Notenverwaltung {
         private string manyToManyTableName;
         private string ownColumn;
         private string foreignColumn;
-        private int foreignId;
-        public ManyToManyKeyValue(string manyToManyTableName, string ownColumn, string foreignColumn, int foreignId) {
+        private List<int> foreignIds;
+        public ManyToManyKeyValue(  string manyToManyTableName, 
+                                    string ownColumn, 
+                                    string foreignColumn, 
+                                    List<int> foreignIds) {
             this.manyToManyTableName = manyToManyTableName;
             this.ownColumn = ownColumn;
             this.foreignColumn = foreignColumn;
-            this.foreignId = foreignId;
+            this.foreignIds = foreignIds;
         }
         private ManyToManyKeyValue() {
             //Default Konstruktur deaktiviert
         }
-        public string GetTable() {
+        public string GetTablename() {
             return manyToManyTableName;
         }
-        public int GetForeignId() {
-            return foreignId;
+        public List<int> GetForeignIds() {
+            return foreignIds;
         }
         public string GetOwnColumn() {
             return ownColumn;
