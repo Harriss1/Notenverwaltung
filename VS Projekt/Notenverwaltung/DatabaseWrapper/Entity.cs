@@ -6,6 +6,7 @@ namespace Notenverwaltung {
     /// </summary>
     internal abstract class Entity {
         private DatabaseStorage storage;
+        protected const int recursionMaxDepth = 3;
         /// <summary>
         /// Parameter muss auf Wahr gesetzt werden, falls neue Beziehungen hinzukommen.
         /// </summary>
@@ -35,6 +36,9 @@ namespace Notenverwaltung {
         /// </summary>
         /// <param name="attributeToValuesDescription">Beschreibung der Entität Attribut-Zu-Attributwerte</param>
         protected abstract void SetAttributesFromInternal(AttributeToValuesDescription attributeToValuesDescription);
+        //protected void InokeAttributeSetter(AttributeToValuesDescription attributeToValuesDescription, int recursionLevel) {
+        //    SetAttributesFromInternal(attributeToValuesDescription);
+        //}
 
         public Entity Create() {
             int lastRowId = storage.InsertSingleEntity(this);
@@ -42,7 +46,7 @@ namespace Notenverwaltung {
 
             // Mittels FindById werden die Beziehungen der Objekte aktualisiert
             // Dies müsste korrigiert werden, da man es da nicht vermutet
-            return FindById(lastRowId, "Quelle: Create");
+            return FindById(lastRowId);
         }
 
         public Entity Update() {
@@ -53,6 +57,7 @@ namespace Notenverwaltung {
                 // Wir können nur Beziehungen hinzufügen, zur Zeit sind
                 // keine Beziehungen löschbar
                 storage.InsertManyToManyRelationsIfMissing(this);
+                isNewManyToManyRelationAdded= false;
             }
             // Mittels FindById werden die Beziehungen der Objekte aktualisiert
             // Dies müsste korrigiert werden, da man es da nicht vermutet
@@ -62,10 +67,6 @@ namespace Notenverwaltung {
         public void Delete() {
             storage.Delete(this);
             id = -1;
-        }
-        private Entity FindById(int primaryKey, string debugMessage) {
-            System.Console.WriteLine(debugMessage);
-            return this.FindById(primaryKey);
         }
         public Entity FindById(int primaryKey) {
             System.Console.WriteLine("FindById id=" + primaryKey);
@@ -79,6 +80,27 @@ namespace Notenverwaltung {
             }
             retrievedContent.primaryKeyValue = primaryKey;
             SetAttributesFromInternal(retrievedContent);
+            return this;
+        }
+        internal Entity FindById(int primaryKey, int recursionLevel) {
+            
+            System.Console.WriteLine("FindById id=" + primaryKey);
+            if (primaryKey <= -1) {
+                throw new System.ArgumentOutOfRangeException("id value=" + primaryKey);
+            }
+            AttributeToValuesDescription retrievedContent = storage.FindById(primaryKey, this);
+            if (retrievedContent == null) {
+                // Falls kein Datensatz gefunden wird
+                return null;
+            }
+            retrievedContent.primaryKeyValue = primaryKey;
+            retrievedContent.recursionLevel++;
+            if (recursionLevel >= recursionMaxDepth) {
+                System.Console.WriteLine("Rekursiontiefe erreicht.");
+                return null;
+            }
+            SetAttributesFromInternal(retrievedContent);
+            //InokeAttributeSetter(retrievedContent, recursionLevel);
             return this;
         }
 

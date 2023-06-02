@@ -31,6 +31,7 @@ namespace Notenverwaltung {
                 this.tempForeignKeyPersonId
                 ));
 
+            // Klassenmitglied (Viele zu Viele Beziehung)
             ManyToManyKeyValue studentHasClassRelation = new ManyToManyKeyValue(
                     TableNotation.studentHasClass,
                     TableNotation.StudentHasClassAttr.studentId,
@@ -38,6 +39,7 @@ namespace Notenverwaltung {
                     tempClassForeignIds);
             attributeList.AddManyToManyRelation(studentHasClassRelation);
 
+            // Kursteilnehmer (Viele-zu-Viele Beziehung)
             ManyToManyKeyValue participantRelation = new ManyToManyKeyValue(
                     TableNotation.participant,
                     TableNotation.ParticipantAttr.studentId,
@@ -66,32 +68,23 @@ namespace Notenverwaltung {
             }
             this.person = personRelationship;
 
-            //Klassen setzen Viele - Zu - Viele(Ein Schüler kann auch mehrere Klassen haben)
-            //classes.Clear();
-            //foreach (ManyToManyKeyValue relationDescription
-            //    in attributeToValuesDescription.GetAllManyToManyRelations()) {
-            //    tempClassForeignIds = relationDescription.GetForeignIds();
-            //    foreach (int classId in tempClassForeignIds) {
-            //        Class relatedClass = new Class();
-            //        if (relatedClass.FindById(classId) == null) {
-            //            throw new ArgumentException("Klasse mit ID=" + classId + " existiert nicht, Beziehung kann nicht erstellt werden");
-            //        }
-            //        else {
-            //            classes.Add(relatedClass);
-            //            relatedClass.Print();
-            //        }
-            //    }
-            //}
-
-            foreach (ManyToManyKeyValue relationDescription
-                in attributeToValuesDescription.GetAllManyToManyRelations()) {
-                if (relationDescription.GetTablename().Equals(TableNotation.studentHasClass)) {
-                    classes.Clear();
-                    tempClassForeignIds = relationDescription.GetForeignIds();
-                    foreach (int classId in tempClassForeignIds) {
-                        Class relatedClass = new Class();
-                        if (relatedClass.FindById(classId) == null) {
+            //Klassenmitglied
+            //TODO Endlosschleife: Student sucht seine Klasse mittels FindById, und Klasse sucht seine Studenten
+            // mittels FindById
+            ManyToManyKeyValue studentHasClassRelation =
+                attributeToValuesDescription.GetManyToManyRelation(TableNotation.studentHasClass);
+            if (studentHasClassRelation != null) {
+                classes.Clear();
+                tempClassForeignIds = studentHasClassRelation.GetForeignIds();
+                foreach (int classId in tempClassForeignIds) {
+                    Class relatedClass = new Class();
+                    if (attributeToValuesDescription.recursionLevel >= recursionMaxDepth) {
+                        //System.Console.WriteLine("Klasse mit ID =" + classId + " ==> Rekursionstiefe erreicht");
+                    }
+                    else {
+                        if (relatedClass.FindById(classId, attributeToValuesDescription.recursionLevel) == null) {
                             throw new ArgumentException("Klasse mit ID=" + classId + " existiert nicht, Beziehung kann nicht erstellt werden");
+
                         }
                         else {
                             classes.Add(relatedClass);
@@ -99,38 +92,37 @@ namespace Notenverwaltung {
                         }
                     }
                 }
-
-                if (relationDescription.GetTablename().Equals(TableNotation.participant)) {
-                    courses.Clear();
-                    tempCourseForeignIds = relationDescription.GetForeignIds();
-                    foreach (int courseId in tempCourseForeignIds) {
-                        Course relatedCourse = new Course();
-                        if (relatedCourse.FindById(courseId) == null) {
-                            throw new ArgumentException("Klasse mit ID=" + courseId + " existiert nicht, Beziehung kann nicht erstellt werden");
-                        }
-                        else {
-                            courses.Add(relatedCourse);
-                            relatedCourse.Print();
-                        }
-                    }
-                }
             }
 
-            // Person setzen: deprecated
-            //Person personRelationship = new Person();
-            //int personId = attributeToValuesDescription.GetRelationId(TableNotation.StudentAttr.personId);
-            //if (personRelationship.FindById(personId) == null) {
-            //    throw new ArgumentException("Person mit ID=" + personId + " existiert nicht, Beziehung kann nicht erstellt werden");
+            // Kursteilnehmer
+            //ManyToManyKeyValue participantDescription =
+            //    attributeToValuesDescription.GetManyToManyRelation(TableNotation.participant);
+            //if (participantDescription != null) {
+            //    courses.Clear();
+            //    tempCourseForeignIds = participantDescription.GetForeignIds();
+            //    foreach (int courseId in tempCourseForeignIds) {
+            //        Course relatedCourse = new Course();
+            //        if (relatedCourse.FindById(courseId) == null) {
+            //            throw new ArgumentException("Klasse mit ID=" + courseId + " existiert nicht, Beziehung kann nicht erstellt werden");
+            //        }
+            //        else {
+            //            courses.Add(relatedCourse);
+            //            relatedCourse.Print();
+            //        }
+            //    }
             //}
-            //this.person = personRelationship;
-
 
         }
 
-        public void AddToClass(Class icd13) {
+        public void AddToClass(Class newClass) {
             isNewManyToManyRelationAdded = true;
-            classes.Add(icd13);
-            tempClassForeignIds.Add(icd13.id);
+            classes.Add(newClass);
+            tempClassForeignIds.Add(newClass.id);
+        }
+        public void AddToCourse(Course newCourse) {
+            isNewManyToManyRelationAdded = true;
+            courses.Add(newCourse);
+            tempCourseForeignIds.Add(newCourse.id);
         }
     }
 }

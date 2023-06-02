@@ -12,6 +12,9 @@ namespace Notenverwaltung {
         public Subject subject;
         private int tempForeignKeySubjectId;
 
+        public List<Student> participants = new List<Student>();
+        private List<int> tempParticipantIds = new List<int>();
+
         public Course() : base() { }
         public Course(string label, DateTime startDate, DateTime endDate, Subject subject) {
             this.label = label;
@@ -38,6 +41,13 @@ namespace Notenverwaltung {
                 this.tempForeignKeySubjectId
                 ));
 
+            ManyToManyKeyValue participantRelation = new ManyToManyKeyValue(
+                    TableNotation.participant,
+                    TableNotation.ParticipantAttr.courseId,
+                    TableNotation.ParticipantAttr.studentId,
+                    this.tempParticipantIds);
+            attributeList.AddManyToManyRelation(participantRelation);
+
             return attributeList;
         }
 
@@ -61,6 +71,23 @@ namespace Notenverwaltung {
                     "existiert nicht, Beziehung kann nicht erstellt werden");
             }
             this.subject = subjectRelationship;
+
+            // Viele-zu-viele Beziehungen: Kursteilnehmer
+            ManyToManyKeyValue participantsRelation = attributeToValuesDescription.GetManyToManyRelation(TableNotation.participant);
+            if (participantsRelation != null) {
+                participants.Clear();
+                tempParticipantIds = participantsRelation.GetForeignIds();
+                foreach (int studentId in tempParticipantIds) {
+                    Student newParticipant = new Student();
+                    if (newParticipant.FindById(studentId) == null) {
+                        throw new ArgumentException("Schüler mit ID=" + studentId + " existiert nicht, Beziehung kann nicht erstellt werden");
+                    }
+                    else {
+                        participants.Add(newParticipant);
+                        newParticipant.Print();
+                    }
+                }
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Notenverwaltung {
     /// </summary>
     internal class AttributeToValuesDescription {
         public int primaryKeyValue;
+        public int recursionLevel = 3;
         public string primaryKey { get; private set; }
         private List<KeyValue> keyValues = new List<KeyValue>();
         private List<KeyValue> singleRelationships = new List<KeyValue>();
@@ -104,7 +105,7 @@ namespace Notenverwaltung {
         public void AddManyToManyRelation(ManyToManyKeyValue manyToManyKeyValue) {
             manyToManyRelationships.Add(manyToManyKeyValue);
         }
-        public object GetManyToManyRelation(string tableName) {
+        public ManyToManyKeyValue GetManyToManyRelation(string tableName) {
             foreach (ManyToManyKeyValue relation in manyToManyRelationships) {
                 if (relation.GetTablename().Equals(tableName)) {
                     return relation;

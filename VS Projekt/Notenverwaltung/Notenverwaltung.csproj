@@ -70,6 +70,8 @@
     <Compile Include="Model\BranchOfStudy.cs" />
     <Compile Include="Model\Class.cs" />
     <Compile Include="Model\Course.cs" />
+    <Compile Include="Model\Grade.cs" />
+    <Compile Include="Model\Participant.cs" />
     <Compile Include="Model\Student.cs" />
     <Compile Include="Model\Subject.cs" />
     <Compile Include="Model\Teacher.cs" />

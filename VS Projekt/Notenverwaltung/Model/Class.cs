@@ -70,21 +70,27 @@ namespace Notenverwaltung {
             }
             this.branchOfStudy = branchRelationship;
 
-            // Klassen setzen Viele-Zu-Viele (Ein Schüler kann auch mehrere Klassen haben)
-            //enrolledStudents.Clear();
-            //foreach (ManyToManyKeyValue relationDescription
-            //    in attributeToValuesDescription.GetAllManyToManyRelations()) {
-            //    Student student = new Student();
-            //    int studentId = relationDescription.GetForeignId();
-            //    if (student.FindById(relationDescription.GetForeignId()) == null) {
-            //        throw new ArgumentException("Schüler mit ID=" + studentId + " existiert nicht, " +
-            //            "Beziehung kann nicht erstellt werden");
-            //    }
-            //    else {
-            //        enrolledStudents.Add(student);
-            //        student.Print();
-            //    }
-            //}
+            ManyToManyKeyValue enrolledStudentsRelation = attributeToValuesDescription.GetManyToManyRelation(TableNotation.studentHasClass);
+            if (enrolledStudentsRelation != null) {
+                enrolledStudents.Clear();
+                tempForeignStudentIds = enrolledStudentsRelation.GetForeignIds();
+                foreach (int studentId in tempForeignStudentIds) {
+                    Student enrolledStudent = new Student();
+                    if (enrolledStudent.FindById(studentId) == null) {
+                        throw new ArgumentException("Klasse mit ID=" + studentId + " existiert nicht, Beziehung kann nicht erstellt werden");
+                    }
+                    else {
+                        enrolledStudents.Add(enrolledStudent);
+                        enrolledStudent.Print();
+                    }
+                }
+            }
+        }
+
+        public void AddClassMember(Student student) {
+            isNewManyToManyRelationAdded = true;
+            enrolledStudents.Add(student);
+            tempForeignStudentIds.Add(student.id);
         }
     }
 }

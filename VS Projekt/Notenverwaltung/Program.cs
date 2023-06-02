@@ -76,13 +76,26 @@ namespace Notenverwaltung {
             Class icd13 = new Class("ICD 13", (new SimpleDate("2022-09-01")).ToDateTime, (new SimpleDate("2024-08-31")).ToDateTime, kunstPaedagogik);
             icd13.Create();
             icd13.Print();
+            //System.Console.ReadKey();
             System.Console.WriteLine("########################### Klassenerstellung Ende###");
             Student student1 = new Student(searchHermine);
             student1.Create();
             student1.Print();
-            student1.AddToClass(icd13);
+            student1.AddToClass(icd13); 
             student1.Print();
+
+            //System.Console.ReadKey();
+            System.Console.WriteLine("Kein Loop##################");
             student1.Update();
+            //System.Console.ReadKey();
+            System.Console.WriteLine("Loop##################");
+            icd13.AddClassMember(student1);
+            icd13.AddClassMember(hermineStudent);
+            icd13.Update();
+            icd13.Print();
+            System.Console.WriteLine("########################### foreach classmember ###");
+            //System.Console.ReadKey();
+            icd13.enrolledStudents.ForEach(student => student.Print());
             Student findTheFirstOne = new Student();
             findTheFirstOne.FindById(student1.id);
             findTheFirstOne.Print();
@@ -97,14 +110,15 @@ namespace Notenverwaltung {
             math.Create();
             math.Print();
             math.subject.Print();
-            // TODO
-            //icd13.enrolledStudents.Add(student1);
-            //icd13.Update();
 
-            //foreach (Student student in icd13.enrolledStudents) {
-            //    student.Print();
-            //}
-
+            //Participant teilnehmer1 = new Participant(findTheFirstOne, math);
+            //teilnehmer1.Create();
+            //teilnehmer1.Print();
+            //teilnehmer1.student.person.Print();
+            //Grade gradeForTeilnehmer1 = new Grade(teilnehmer1, "nix zu sagen", "2022-10-10", 98);
+            //gradeForTeilnehmer1.Create();
+            //gradeForTeilnehmer1.Print();
+            
 
             // xTODO Find by ID (done)
             // xTODO Find By KeyValue - String (done)

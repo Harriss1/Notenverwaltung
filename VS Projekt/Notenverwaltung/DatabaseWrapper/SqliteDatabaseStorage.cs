@@ -138,27 +138,29 @@ namespace Notenverwaltung {
         /// <returns>Id der neu eingefügten Zeile, oder -1 falls Fehler</returns>
         private int TransactInsertStatement(string insertStatement) {
             int lastRowId = -1;
-            SQLiteConnection dbConnection = builder.OpenConnection();
-            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
-                try {
-                    // Ausführung Insert-Statement
-                    SQLiteCommand commandInsertQuery = new SQLiteCommand(insertStatement, dbConnection);
-                    commandInsertQuery.ExecuteNonQuery();
-                    
-                    // Ermittlte Id der neu eingefügten Zeile
-                    SQLiteCommand commandLastRowId = new SQLiteCommand("SELECT last_insert_rowid();", dbConnection);
-                    Int64 LastRowID64 = (Int64)commandLastRowId.ExecuteScalar();
-                    lastRowId = (int)LastRowID64;
-                    transaction.Commit();
+            using (SQLiteConnection dbConnection = builder.OpenConnection()) {
+                //SQLiteConnection dbConnection = builder.OpenConnection();
+                using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                    try {
+                        // Ausführung Insert-Statement
+                        SQLiteCommand commandInsertQuery = new SQLiteCommand(insertStatement, dbConnection);
+                        commandInsertQuery.ExecuteNonQuery();
+
+                        // Ermittlte Id der neu eingefügten Zeile
+                        SQLiteCommand commandLastRowId = new SQLiteCommand("SELECT last_insert_rowid();", dbConnection);
+                        Int64 LastRowID64 = (Int64)commandLastRowId.ExecuteScalar();
+                        lastRowId = (int)LastRowID64;
+                        transaction.Commit();
+                    }
+                    catch (Exception e) {
+                        transaction.Rollback();
+                        Console.WriteLine("SQL-Transaction abgebrochen.", e);
+                        Console.WriteLine("Letzes Statement=" + insertStatement);
+                        //throw;
+                    }
                 }
-                catch (Exception e) {
-                    transaction.Rollback();
-                    Console.WriteLine("SQL-Transaction abgebrochen.", e);
-                    Console.WriteLine("Letzes Statement=" + insertStatement);
-                    //throw;
-                }
+                dbConnection.Close();
             }
-            dbConnection.Close();
             return lastRowId;
         }
 
@@ -167,22 +169,25 @@ namespace Notenverwaltung {
         /// </summary>
         /// <param name="updateStatement">Sqlite Insert Statement</param>
         private void TransactUpdateStatement(string updateStatement) {
-            SQLiteConnection dbConnection = builder.OpenConnection();
-            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
-                try {
-                    // Ausführung Insert-Statement
-                    SQLiteCommand commandInsertQuery = new SQLiteCommand(updateStatement, dbConnection);
-                    commandInsertQuery.ExecuteNonQuery();
-                    transaction.Commit();
+
+            using (SQLiteConnection dbConnection = builder.OpenConnection()) {
+                //SQLiteConnection dbConnection = builder.OpenConnection();
+                using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                    try {
+                        // Ausführung Insert-Statement
+                        SQLiteCommand commandInsertQuery = new SQLiteCommand(updateStatement, dbConnection);
+                        commandInsertQuery.ExecuteNonQuery();
+                        transaction.Commit();
+                    }
+                    catch (Exception e) {
+                        transaction.Rollback();
+                        Console.WriteLine("SQL-Transaction abgebrochen.", e);
+                        Console.WriteLine("Letzes Statement=" + updateStatement);
+                        //throw;
+                    }
                 }
-                catch (Exception e) {
-                    transaction.Rollback();
-                    Console.WriteLine("SQL-Transaction abgebrochen.", e);
-                    Console.WriteLine("Letzes Statement=" + updateStatement);
-                    //throw;
-                }
+                dbConnection.Close();
             }
-            dbConnection.Close();
         }
 
         public void Delete(Entity entity) {
@@ -203,22 +208,25 @@ namespace Notenverwaltung {
             return statement;
         }
         private void TransactSimpleStatement(string deleteStatement) {
-            SQLiteConnection dbConnection = builder.OpenConnection();
-            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
-                try {
-                    // Ausführung Insert-Statement
-                    SQLiteCommand commandInsertQuery = new SQLiteCommand(deleteStatement, dbConnection);
-                    commandInsertQuery.ExecuteNonQuery();
-                    transaction.Commit();
+
+            using (SQLiteConnection dbConnection = builder.OpenConnection()) {
+                //SQLiteConnection dbConnection = builder.OpenConnection();
+                using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                    try {
+                        // Ausführung Insert-Statement
+                        SQLiteCommand commandInsertQuery = new SQLiteCommand(deleteStatement, dbConnection);
+                        commandInsertQuery.ExecuteNonQuery();
+                        transaction.Commit();
+                    }
+                    catch (Exception e) {
+                        transaction.Rollback();
+                        Console.WriteLine("SQL-Transaction abgebrochen.", e);
+                        Console.WriteLine("Letzes Statement=" + deleteStatement);
+                        //throw;
+                    }
                 }
-                catch (Exception e) {
-                    transaction.Rollback();
-                    Console.WriteLine("SQL-Transaction abgebrochen.", e);
-                    Console.WriteLine("Letzes Statement=" + deleteStatement);
-                    //throw;
-                }
+                dbConnection.Close();
             }
-            dbConnection.Close();
         }
 
         public AttributeToValuesDescription FindById(int id, Entity entity) {
@@ -264,73 +272,77 @@ namespace Notenverwaltung {
             System.Console.WriteLine("primaryColumn=" + ownColumn);
             System.Console.WriteLine("secondaryColumn=" + foreignColumn);
             List<int> foreignKeys = new List<int>();
-            SQLiteConnection dbConnection = builder.OpenConnection();
-            
-            builder.OpenConnection();
-            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
-                try {
-                    SQLiteCommand command = new SQLiteCommand(query, dbConnection);
 
-                    SQLiteDataReader rdr = command.ExecuteReader();
-                    if (!rdr.HasRows) {
-                        throw new InvalidDataException("Es wurde keine Datensätze gefunden");
-                    }
-                    while (rdr.Read()) {
-                        int ownColumnId = -1;
-                        int foreignColumnId = -1;
-                        System.Console.WriteLine("1=" + rdr[ownColumn].GetType().ToString());
-                        System.Console.WriteLine("2=" + rdr[foreignColumn].GetType().ToString());
-                        if (rdr[ownColumn].GetType() == typeof(Int64)
-                            && rdr[foreignColumn].GetType() == typeof(Int64)) {
-                            ownColumnId = Convert.ToInt32(rdr[ownColumn]);
-                            foreignColumnId = Convert.ToInt32(rdr[foreignColumn]);
-                            foreignKeys.Add(foreignColumnId);
+            using (SQLiteConnection dbConnection = builder.OpenConnection()) {
+                //SQLiteConnection dbConnection = builder.OpenConnection();
+                using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                    try {
+                        SQLiteCommand command = new SQLiteCommand(query, dbConnection);
+
+                        using (SQLiteDataReader rdr = command.ExecuteReader()) {
+                            //SQLiteDataReader rdr = command.ExecuteReader();
+                            if (!rdr.HasRows) {
+                                rdr.Close();
+                                throw new InvalidDataException("Es wurde keine Datensätze gefunden");
+                            }
+                            while (rdr.Read()) {
+                                int ownColumnId = -1;
+                                int foreignColumnId = -1;
+                                System.Console.WriteLine("1=" + rdr[ownColumn].GetType().ToString());
+                                System.Console.WriteLine("2=" + rdr[foreignColumn].GetType().ToString());
+                                if (rdr[ownColumn].GetType() == typeof(Int64)
+                                    && rdr[foreignColumn].GetType() == typeof(Int64)) {
+                                    ownColumnId = Convert.ToInt32(rdr[ownColumn]);
+                                    foreignColumnId = Convert.ToInt32(rdr[foreignColumn]);
+                                    foreignKeys.Add(foreignColumnId);
+                                }
+                                else {
+                                    throw new InvalidDataException("Many-To-Many Tabellen benötigen " +
+                                        "zwei Spalten jeweils mit Integer befüllt");
+                                }
+                                /// Okay Problem erkannt:
+                                /// In der AttributeToValueDescription hätte ich auf keinen Fall
+                                /// Model-Objekte ablegen dürfen! Dann fehlt nämlich der eindeutige
+                                /// Tabellen/Spalten-Bezeichner.
+                            }
+                            transaction.Commit();
+                            rdr.Close();
+                            ManyToManyKeyValue relationDescription = new ManyToManyKeyValue(
+                                tablename,
+                                ownColumn,
+                                foreignColumn,
+                                foreignKeys
+                                );
+                            retrievedDescription.AddManyToManyRelation(relationDescription);
                         }
-                        else {
-                            throw new InvalidDataException("Many-To-Many Tabellen benötigen " +
-                                "zwei Spalten jeweils mit Integer befüllt");
-                        }
-                        /// Okay Problem erkannt:
-                        /// In der AttributeToValueDescription hätte ich auf keinen Fall
-                        /// Model-Objekte ablegen dürfen! Dann fehlt nämlich der eindeutige
-                        /// Tabellen/Spalten-Bezeichner.
                     }
-                    transaction.Commit();
+                    catch (System.FormatException e) {
+                        transaction.Rollback();
+                        Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                        Console.Error.WriteLine("Letzer Query=" + query);
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.Error.WriteLine("Es existert ein falscher Datumswert der Datenbank");
+                        Console.BackgroundColor = ConsoleColor.Black;
 
-                    ManyToManyKeyValue relationDescription = new ManyToManyKeyValue(
-                        tablename,
-                        ownColumn,
-                        foreignColumn,
-                        foreignKeys
-                        );
-                    retrievedDescription.AddManyToManyRelation(relationDescription);
-                }
-                catch (System.FormatException e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
-                    Console.Error.WriteLine("Letzer Query=" + query);
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    Console.Error.WriteLine("Es existert ein falscher Datumswert der Datenbank");
-                    Console.BackgroundColor = ConsoleColor.Black;
+                    }
+                    catch (System.InvalidCastException e) {
+                        transaction.Rollback();
+                        Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                        Console.Error.WriteLine("Letzer Query=" + query);
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.Error.WriteLine("Format wurde falsch konvertiert (z.B. Date nicht in String umgewandelt)");
+                        Console.BackgroundColor = ConsoleColor.Black;
 
+                    }
+                    catch (Exception e) {
+                        transaction.Rollback();
+                        Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                        Console.Error.WriteLine("Letzer Query=" + query);
+                        //throw;
+                    }
                 }
-                catch (System.InvalidCastException e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
-                    Console.Error.WriteLine("Letzer Query=" + query);
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    Console.Error.WriteLine("Format wurde falsch konvertiert (z.B. Date nicht in String umgewandelt)");
-                    Console.BackgroundColor = ConsoleColor.Black;
-
-                }
-                catch (Exception e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
-                    Console.Error.WriteLine("Letzer Query=" + query);
-                    //throw;
-                }
+                dbConnection.Close();
             }
-            dbConnection.Close();
             return retrievedDescription;
         }
 
@@ -374,84 +386,90 @@ namespace Notenverwaltung {
                     entityDescription.primaryKeyValue);
 
             List<string> debugContent = new List<string>();
-            SQLiteConnection dbConnection = builder.OpenConnection();
-            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
-                try {
-                    SQLiteCommand command = new SQLiteCommand(query, dbConnection);
 
-                    SQLiteDataReader rdr = command.ExecuteReader();
-                    if (!rdr.HasRows) {
-                        Console.WriteLine("Datensatz exisitert nicht für ID = " + entityDescription.primaryKeyValue);
-                        return null;
-                    }
-                    while (rdr.Read()) {
-                        foreach (KeyValue keyValuePair in entityDescription.GetAttributes()) {
-                            string fieldContent = "";
-                            object o = rdr[keyValuePair.GetKey()].GetType();
-                            System.Console.WriteLine("Type = " + o.ToString());
-                            if (rdr[keyValuePair.GetKey()].GetType() == typeof(string)) {
-                                fieldContent = (string)rdr[keyValuePair.GetKey()];
-                                retrievedDescription.AddStringAttribute(keyValuePair.GetKey(), fieldContent);
+            using (SQLiteConnection dbConnection = builder.OpenConnection()) {
+                //SQLiteConnection dbConnection = builder.OpenConnection();
+                using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                    try {
+                        SQLiteCommand command = new SQLiteCommand(query, dbConnection);
+                        using (SQLiteDataReader rdr = command.ExecuteReader()) {
+                            //SQLiteDataReader rdr = command.ExecuteReader();
+                            if (!rdr.HasRows) {
+                                rdr.Close();
+                                Console.WriteLine("Datensatz exisitert nicht für ID = " + entityDescription.primaryKeyValue);
+                                return null;
                             }
-                            if (rdr[keyValuePair.GetKey()].GetType() == typeof(DateTime)) {
-                                DateTime dateTime = (DateTime)rdr[keyValuePair.GetKey()];
-                                fieldContent = dateTime.ToString("yyyy-MM-dd");
-                                retrievedDescription.AddDateTimeAttribute(keyValuePair.GetKey(), dateTime);
+                            while (rdr.Read()) {
+                                foreach (KeyValue keyValuePair in entityDescription.GetAttributes()) {
+                                    string fieldContent = "";
+                                    object o = rdr[keyValuePair.GetKey()].GetType();
+                                    System.Console.WriteLine("Type = " + o.ToString());
+                                    if (rdr[keyValuePair.GetKey()].GetType() == typeof(string)) {
+                                        fieldContent = (string)rdr[keyValuePair.GetKey()];
+                                        retrievedDescription.AddStringAttribute(keyValuePair.GetKey(), fieldContent);
+                                    }
+                                    if (rdr[keyValuePair.GetKey()].GetType() == typeof(DateTime)) {
+                                        DateTime dateTime = (DateTime)rdr[keyValuePair.GetKey()];
+                                        fieldContent = dateTime.ToString("yyyy-MM-dd");
+                                        retrievedDescription.AddDateTimeAttribute(keyValuePair.GetKey(), dateTime);
+                                    }
+                                    if (rdr[keyValuePair.GetKey()].GetType() == typeof(Int64)) {
+                                        fieldContent = rdr[keyValuePair.GetKey()].ToString();
+                                        int number = int.Parse(fieldContent);
+                                        retrievedDescription.AddIntegerAttribute(keyValuePair.GetKey(), number);
+                                    }
+                                    debugContent.Add(fieldContent);
+                                }
+                                if (entity.ToAttributeValueDescription().GetOneToXRelations().Count > 0) {
+                                    //Console.WriteLine("### Relationen existieren!");
+                                    foreach (OneToXRelationKeyValue relationDescription
+                                                in entity.ToAttributeValueDescription().GetOneToXRelations()) {
+                                        //Console.WriteLine("Relationsdetails: " + relationDescription.GetOwnForeignColumnName() + " | " +
+                                        //relationDescription.GetForeignId());
+                                        int foreignKey = int.Parse(rdr[relationDescription.GetOwnForeignColumnName()].ToString());
+                                        OneToXRelationKeyValue updatedDescription = new OneToXRelationKeyValue(
+                                            relationDescription.GetForeignTable(),
+                                            relationDescription.GetForeignPrimaryColumnName(),
+                                            relationDescription.GetOwnForeignColumnName(),
+                                            foreignKey
+                                            );
+                                        //Console.WriteLine("### Gefundener foreign Key=" + foreignKey);
+                                        retrievedDescription.AddOneToXRelation(updatedDescription);
+                                    }
+                                }
+
                             }
-                            if (rdr[keyValuePair.GetKey()].GetType() == typeof(Int64)) {                                
-                                fieldContent = rdr[keyValuePair.GetKey()].ToString();
-                                int number = int.Parse(fieldContent);
-                                retrievedDescription.AddIntegerAttribute(keyValuePair.GetKey(), number);
-                            }
-                            debugContent.Add(fieldContent);
+                            transaction.Commit();
+                            rdr.Close();
                         }
-                        if (entity.ToAttributeValueDescription().GetOneToXRelations().Count > 0) {
-                            //Console.WriteLine("### Relationen existieren!");
-                            foreach (OneToXRelationKeyValue relationDescription 
-                                        in entity.ToAttributeValueDescription().GetOneToXRelations()) {
-                                //Console.WriteLine("Relationsdetails: " + relationDescription.GetOwnForeignColumnName() + " | " +
-                                    //relationDescription.GetForeignId());
-                                int foreignKey = int.Parse(rdr[relationDescription.GetOwnForeignColumnName()].ToString());
-                                OneToXRelationKeyValue updatedDescription = new OneToXRelationKeyValue(
-                                    relationDescription.GetForeignTable(),
-                                    relationDescription.GetForeignPrimaryColumnName(),
-                                    relationDescription.GetOwnForeignColumnName(),
-                                    foreignKey
-                                    );
-                                //Console.WriteLine("### Gefundener foreign Key=" + foreignKey);
-                                retrievedDescription.AddOneToXRelation(updatedDescription);
-                            }
-                        }
+                    }
+                    catch (System.FormatException e) {
+                        transaction.Rollback();
+                        Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                        Console.Error.WriteLine("Letzer Query=" + query);
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.Error.WriteLine("Es existert ein falscher Datumswert der Datenbank");
+                        Console.BackgroundColor = ConsoleColor.Black;
 
                     }
-                    transaction.Commit();
-                }
-                catch (System.FormatException e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
-                    Console.Error.WriteLine("Letzer Query=" + query);
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    Console.Error.WriteLine("Es existert ein falscher Datumswert der Datenbank");
-                    Console.BackgroundColor = ConsoleColor.Black;
+                    catch (System.InvalidCastException e) {
+                        transaction.Rollback();
+                        Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                        Console.Error.WriteLine("Letzer Query=" + query);
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.Error.WriteLine("Format wurde falsch konvertiert (z.B. Date nicht in String umgewandelt)");
+                        Console.BackgroundColor = ConsoleColor.Black;
 
+                    }
+                    catch (Exception e) {
+                        transaction.Rollback();
+                        Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                        Console.Error.WriteLine("Letzer Query=" + query);
+                        //throw;
+                    }
                 }
-                catch (System.InvalidCastException e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
-                    Console.Error.WriteLine("Letzer Query=" + query);
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    Console.Error.WriteLine("Format wurde falsch konvertiert (z.B. Date nicht in String umgewandelt)");
-                    Console.BackgroundColor = ConsoleColor.Black;
-
-                }
-                catch (Exception e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
-                    Console.Error.WriteLine("Letzer Query=" + query);
-                    //throw;
-                }
+                dbConnection.Close();
             }
-            dbConnection.Close();
 
             for (int i = 0; i < debugContent.Count; i++) {
                 string sql = debugContent[i];
@@ -517,31 +535,36 @@ namespace Notenverwaltung {
                 + " AND "
                 + ownColumn + " = " + primaryKey + ";";
             bool result = false;
-            SQLiteConnection dbConnection = builder.OpenConnection();
-            using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
-                try {
-                    SQLiteCommand command = new SQLiteCommand(query, dbConnection);
-                    SQLiteDataReader rdr = command.ExecuteReader();
-                    if (!rdr.HasRows) {
-                        Console.WriteLine("Erfolgreich festgestellt, dass Beziehung nicht gesetzt ist");
-                        result = true;
+
+            using (SQLiteConnection dbConnection = builder.OpenConnection()) {
+                //SQLiteConnection dbConnection = builder.OpenConnection();
+                using (SQLiteTransaction transaction = dbConnection.BeginTransaction()) {
+                    try {
+                        SQLiteCommand command = new SQLiteCommand(query, dbConnection);
+                        using (SQLiteDataReader rdr = command.ExecuteReader()) {
+                            //SQLiteDataReader rdr = command.ExecuteReader();
+                            if (!rdr.HasRows) {
+                                Console.WriteLine("Erfolgreich festgestellt, dass Beziehung nicht gesetzt ist");
+                                result = true;
+                            }
+                            while (rdr.Read()) {
+                                string ownColumnText = (string)rdr[ownColumn];
+                                string foreignColumnText = (string)rdr[foreignColumn];
+                                System.Console.WriteLine("Gefundene N-M-Beziehung:" + ownColumn + "=" + ownColumnText
+                                    + foreignColumn + "=" + foreignColumnText);
+                            }
+                            transaction.Commit();
+                        }
                     }
-                    while (rdr.Read()) {
-                        string ownColumnText = (string)rdr[ownColumn];
-                        string foreignColumnText = (string)rdr[foreignColumn];
-                        System.Console.WriteLine("Gefundene N-M-Beziehung:" + ownColumn + "=" + ownColumnText
-                            + foreignColumn + "=" + foreignColumnText);
+                    catch (Exception e) {
+                        transaction.Rollback();
+                        Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
+                        Console.Error.WriteLine("Letzer Query=" + query);
+                        //throw;
                     }
-                    transaction.Commit();
                 }
-                catch (Exception e) {
-                    transaction.Rollback();
-                    Console.Error.WriteLine("Query Ausführung abgebrochen." + e);
-                    Console.Error.WriteLine("Letzer Query=" + query);
-                    //throw;
-                }
+                dbConnection.Close();
             }
-            dbConnection.Close();
             return result;
         }
     }

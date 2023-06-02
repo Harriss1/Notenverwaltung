@@ -22,6 +22,7 @@ namespace Notenverwaltung {
         public const string lecturer = "Dozent";
         public const string subject = "Fach";
         public const string participant = "Teilnehmer";
+        public const string grade = "Note";
 
         /////////////////////////////////////////////////////////////
         /// Attribute einzelner Tabellen
@@ -83,6 +84,15 @@ namespace Notenverwaltung {
             public const string participantId = "TeilnehmerId";
             public const string courseId = "KursId";
             public const string studentId = "SchuelerId";
+        }
+
+        public class GradeAttr {
+            public const string gradeId = "NoteId";
+            public const string participantId = "TeilnehmerId";
+            public const string note = "Bemerkung";
+            public const string date = "Datum";
+            public const string valueInPercent = "WertInProzent";
+            public const string lecturerId = "DozentId";
         }
 
 
