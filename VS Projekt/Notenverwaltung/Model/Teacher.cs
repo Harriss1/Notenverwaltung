@@ -51,6 +51,7 @@ namespace Notenverwaltung {
 
         protected override void SetAttributesFromInternal(AttributeToValuesDescription attributeToValuesDescription) {
             this.id = attributeToValuesDescription.primaryKeyValue;
+
             // Viele-Zu-Eins Beziehungen
             Person personRelationship = new Person();
             OneToXRelationKeyValue relation = attributeToValuesDescription.GetOneToXRelation(TableNotation.person);
@@ -61,22 +62,28 @@ namespace Notenverwaltung {
             }
             this.person = personRelationship;
 
-
-            // Klassen setzen Viele-Zu-Viele (Ein kann auch mehrere Klassen haben)
-            //courses.Clear();
-            //foreach (ManyToManyKeyValue relationDescription
-            //    in attributeToValuesDescription.GetAllManyToManyRelations()) {
-            //    Course relatedCourse = new Course();
-            //    int courseId = relationDescription.GetForeignId();
-            //    if (relatedCourse.FindById(relationDescription.GetForeignId()) == null) {
-            //        throw new ArgumentException("Kurs mit ID=" + courseId + " existiert nicht, Beziehung kann nicht erstellt werden");
-            //    }
-            //    else {
-            //        courses.Add(relatedCourse);
-            //        relatedCourse.Print();
-            //    }
-            //}
-            //int personId = attributeToValuesDescription.GetRelationId(TableNotation.TeacherAttr.personId);
+            // Kurse setzen Viele-Zu-Viele in denen ein Lehrer als Dozent eingetragen ist
+            ManyToManyKeyValue lecturerDescription =
+               attributeToValuesDescription.GetManyToManyRelation(TableNotation.lecturer);
+            if (lecturerDescription != null) {
+                courses.Clear();
+                tempCourseForeignIds = lecturerDescription.GetForeignIds();
+                foreach (int courseId in tempCourseForeignIds) {
+                    Course relatedCourse = new Course();
+                    if (attributeToValuesDescription.recursionLevel >= recursionMaxDepth) {
+                        //System.Console.WriteLine("Klasse mit ID =" + classId + " ==> Rekursionstiefe erreicht");
+                    }
+                    else {
+                        if (relatedCourse.FindById(courseId, attributeToValuesDescription.recursionLevel) == null) {
+                            throw new ArgumentException("Klasse mit ID=" + courseId + " existiert nicht, Beziehung kann nicht erstellt werden");
+                        }
+                        else {
+                            courses.Add(relatedCourse);
+                            relatedCourse.Print();
+                        }
+                    }
+                }
+            }
         }
     }
 }

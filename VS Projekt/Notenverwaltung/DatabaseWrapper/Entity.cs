@@ -96,7 +96,7 @@ namespace Notenverwaltung {
             retrievedContent.primaryKeyValue = primaryKey;
             retrievedContent.recursionLevel++;
             if (recursionLevel >= recursionMaxDepth) {
-                System.Console.WriteLine("Rekursiontiefe erreicht.");
+                //System.Console.WriteLine("Rekursiontiefe erreicht.");
                 return null;
             }
             SetAttributesFromInternal(retrievedContent);
@@ -127,7 +127,7 @@ namespace Notenverwaltung {
         /// Konsolenausgabe: Tabellenname + Inhalte der Felder der einzelnen Entität
         /// </summary>
         public void Print() {
-            System.Console.WriteLine(this.ToTableName() + ": " + this.ToText());
+            DirectWriter.Msg(this.ToTableName() + ": " + this.ToText());
         }
 
 

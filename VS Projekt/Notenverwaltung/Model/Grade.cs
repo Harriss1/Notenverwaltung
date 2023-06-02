@@ -53,14 +53,14 @@ namespace Notenverwaltung {
             valueInPercent = (int)attributeToValuesDescription.GetValue(TableNotation.GradeAttr.valueInPercent);
 
             // Viele-zu-eins Beziehung
-            //Participant participantRelationship = new Participant();
-            //OneToXRelationKeyValue relation = attributeToValuesDescription.GetOneToXRelation(TableNotation.participant);
-            //tempParticipantForeignId = relation.GetForeignId();
-            //if (participantRelationship.FindById(tempParticipantForeignId) == null) {
-            //    throw new ArgumentException("Person mit ID=" + tempParticipantForeignId +
-            //        "existiert nicht, Beziehung kann nicht erstellt werden");
-            //}
-            //this.participant = participantRelationship;
+            Participant participantRelationship = new Participant();
+            OneToXRelationKeyValue relation = attributeToValuesDescription.GetOneToXRelation(TableNotation.participant);
+            tempParticipantForeignId = relation.GetForeignId();
+            if (participantRelationship.FindById(tempParticipantForeignId) == null) {
+                throw new ArgumentException("Person mit ID=" + tempParticipantForeignId +
+                    "existiert nicht, Beziehung kann nicht erstellt werden");
+            }
+            this.participant = participantRelationship;
 
         }
     }

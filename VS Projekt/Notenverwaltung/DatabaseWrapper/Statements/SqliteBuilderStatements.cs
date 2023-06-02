@@ -77,23 +77,37 @@ namespace Notenverwaltung {
                 "KursId INTEGER," +
                 "FOREIGN KEY(LehrerId) REFERENCES Lehrer(LehrerId)," +
                 "FOREIGN KEY(KursId) REFERENCES Kurs(KursId));";
-            string createGradeTyp =
-                "CREATE TABLE IF NOT EXISTS NotenTyp(" +
-                "NotenTypId INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "Bezeichnung VARCHAR(50)," +
-                "Akronym VARCHAR(50)); ";
+            //string createGradeTyp =
+            //    "CREATE TABLE IF NOT EXISTS NotenTyp(" +
+            //    "NotenTypId INTEGER PRIMARY KEY AUTOINCREMENT," +
+            //    "Bezeichnung VARCHAR(50)," +
+            //    "Akronym VARCHAR(50)); ";
+            //string createGrade =
+            //    "CREATE TABLE IF NOT EXISTS Note(" +
+            //    "NoteId INTEGER PRIMARY KEY AUTOINCREMENT," +
+            //    "TeilnehmerId INTEGER NOT NULL," +
+            //    "DozentId INTEGER NOT NULL," +
+            //    "Bemerkung VARCHAR(50)," +
+            //    "Datum DATE," +
+            //    "NotenTypId INTEGER," +
+            //    "WertInProzent INTEGER," +
+            //    "FOREIGN KEY(TeilnehmerId) REFERENCES Teilnehmer(TeilnehmerId)," +
+            //    "FOREIGN KEY(NotenTypId) REFERENCES NotenTyp(NotenTypId)," +
+            //    "FOREIGN KEY(DozentId) REFERENCES Dozent(DozentId)); ";
             string createGrade =
                 "CREATE TABLE IF NOT EXISTS Note(" +
                 "NoteId INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "TeilnehmerId INTEGER NOT NULL," +
-                "DozentId INTEGER NOT NULL," +
+                //"DozentId INTEGER NOT NULL," +
                 "Bemerkung VARCHAR(50)," +
                 "Datum DATE," +
                 "NotenTypId INTEGER," +
                 "WertInProzent INTEGER," +
                 "FOREIGN KEY(TeilnehmerId) REFERENCES Teilnehmer(TeilnehmerId)," +
-                "FOREIGN KEY(NotenTypId) REFERENCES NotenTyp(NotenTypId)," +
-                "FOREIGN KEY(DozentId) REFERENCES Dozent(DozentId)); ";
+                "FOREIGN KEY(NotenTypId) REFERENCES NotenTyp(NotenTypId)" +
+                //"," +
+                //"FOREIGN KEY(DozentId) REFERENCES Dozent(DozentId)" +
+                "); ";
             return new string[]{
                 createPerson,
                 createTeacher,
@@ -105,7 +119,7 @@ namespace Notenverwaltung {
                 createCourse,
                 createParticipant,
                 createLecturer,
-                createGradeTyp,
+                //createGradeTyp,
                 createGrade
             };
         }
@@ -185,21 +199,30 @@ namespace Notenverwaltung {
                 "VALUES" +
                 "(1, 1)," +
                 "(2, 1),(2, 2); ";
-            string gradeType =
-                "INSERT 	INTO NotenTyp (Bezeichnung, Akronym)" +
-                "VALUES" +
-                "('Klausur', 'KA')," +
-                "('Sonstige Mitarbeit', 'SoMi')," +
-                "('Projekt', 'PR'); ";
+            //string gradeType =
+            //    "INSERT 	INTO NotenTyp (Bezeichnung, Akronym)" +
+            //    "VALUES" +
+            //    "('Klausur', 'KA')," +
+            //    "('Sonstige Mitarbeit', 'SoMi')," +
+            //    "('Projekt', 'PR'); ";
+            //string grade =
+            //    "INSERT 	INTO Note (TeilnehmerId, DozentId, Bemerkung, Datum, NotenTypId, WertInProzent)" +
+            //    "VALUES" +
+            //    "(1, 1, 'logisch über Algebra Aufgabe argumentiert', '2022-10-03', 2, '98')," +
+            //    "(1, 1, '', '2022-11-23', 1, '83')," +
+            //    "(1, 2, '', '2023-01-05', 3, '75')," +
+            //    "(2, 3, 'Fragen wiederholt nicht beantwortet', '2022-10-14', 2, '65')," +
+            //    "(2, 3, '', '2022-11-23', 1, '90')," +
+            //    "(2, 3, 'Abgabe drei Tage zu spät am 8.1.2023', '2023-01-05', 3, '0'); ";
             string grade =
-                "INSERT 	INTO Note (TeilnehmerId, DozentId, Bemerkung, Datum, NotenTypId, WertInProzent)" +
+                "INSERT 	INTO Note (TeilnehmerId, Bemerkung, Datum, WertInProzent)" +
                 "VALUES" +
-                "(1, 1, 'logisch über Algebra Aufgabe argumentiert', '2022-10-03', 2, '98')," +
-                "(1, 1, '', '2022-11-23', 1, '83')," +
-                "(1, 2, '', '2023-01-05', 3, '75')," +
-                "(2, 3, 'Fragen wiederholt nicht beantwortet', '2022-10-14', 2, '65')," +
-                "(2, 3, '', '2022-11-23', 1, '90')," +
-                "(2, 3, 'Abgabe drei Tage zu spät am 8.1.2023', '2023-01-05', 3, '0'); ";
+                "(1, 'logisch über Algebra Aufgabe argumentiert', '2022-10-03', '98')," +
+                "(1, '', '2022-11-23', '83')," +
+                "(1, '', '2023-01-05', '75')," +
+                "(2, 'Fragen wiederholt nicht beantwortet', '2022-10-14', '65')," +
+                "(2, '', '2022-11-23', '90')," +
+                "(2, 'Abgabe drei Tage zu spät am 8.1.2023', '2023-01-05', '0'); ";
             return new string[] {
                 person,
                 teacher,
@@ -211,7 +234,7 @@ namespace Notenverwaltung {
                 course,
                 participant,
                 lecturer,
-                gradeType,
+                //gradeType,
                 grade
             };
         }

@@ -20,7 +20,7 @@ namespace Notenverwaltung {
         public int InsertSingleEntity(Entity entity) {
             string insertStatement = CreateInsertStatement(entity);
             int lastRowId = TransactInsertStatement(insertStatement);
-            System.Console.WriteLine("LastInsertId=" + lastRowId.ToString());
+            DirectWriter.Debug("LastInsertId=" + lastRowId.ToString());
             return lastRowId;
         }
 
@@ -61,7 +61,7 @@ namespace Notenverwaltung {
                 if (keyValuePair.GetValue().GetType() == typeof(DateTime)) {
                     DateTime dateTime = (DateTime)keyValuePair.GetValue();
                     string textDate = (new SimpleDate(dateTime)).ToText;
-                    Console.WriteLine(" Datum f. DB:" + textDate);
+                    DirectWriter.Debug(" Datum f. DB:" + textDate);
                     insertQuery += "'" + textDate + "'";
                     insertQuery += ", ";
                     useDefault = false;
@@ -193,7 +193,7 @@ namespace Notenverwaltung {
         public void Delete(Entity entity) {
             string statement = CreateDeleteStatement(entity);
             TransactSimpleStatement(statement);
-            System.Console.WriteLine("stmnt=" + statement);
+            DirectWriter.Debug("stmnt=" + statement);
         }
 
         private string CreateDeleteStatement(Entity entity) {
@@ -247,7 +247,7 @@ namespace Notenverwaltung {
 
         private AttributeToValuesDescription SearchAndAppendManyToManyRelations(AttributeToValuesDescription retrievedDescription, Entity entity, int id) {
             if (entity.ToAttributeValueDescription().GetAllManyToManyRelations().Count > 0) {
-                System.Console.WriteLine("################ Behandle Relationen");
+                DirectWriter.Debug("################ Behandle Relationen");
                 foreach (ManyToManyKeyValue relationDescription
                     in entity.ToAttributeValueDescription().GetAllManyToManyRelations()) {
                     string tablename = relationDescription.GetTablename();
@@ -267,10 +267,10 @@ namespace Notenverwaltung {
                         string tablename,
                         string ownColumn, 
                         string foreignColumn) {
-            System.Console.WriteLine("query=" + query);
-            System.Console.WriteLine("tablename=" + tablename);
-            System.Console.WriteLine("primaryColumn=" + ownColumn);
-            System.Console.WriteLine("secondaryColumn=" + foreignColumn);
+            DirectWriter.Debug("query=" + query);
+            DirectWriter.Debug("tablename=" + tablename);
+            DirectWriter.Debug("primaryColumn=" + ownColumn);
+            DirectWriter.Debug("secondaryColumn=" + foreignColumn);
             List<int> foreignKeys = new List<int>();
 
             using (SQLiteConnection dbConnection = builder.OpenConnection()) {
@@ -288,8 +288,8 @@ namespace Notenverwaltung {
                             while (rdr.Read()) {
                                 int ownColumnId = -1;
                                 int foreignColumnId = -1;
-                                System.Console.WriteLine("1=" + rdr[ownColumn].GetType().ToString());
-                                System.Console.WriteLine("2=" + rdr[foreignColumn].GetType().ToString());
+                                DirectWriter.Debug("1=" + rdr[ownColumn].GetType().ToString());
+                                DirectWriter.Debug("2=" + rdr[foreignColumn].GetType().ToString());
                                 if (rdr[ownColumn].GetType() == typeof(Int64)
                                     && rdr[foreignColumn].GetType() == typeof(Int64)) {
                                     ownColumnId = Convert.ToInt32(rdr[ownColumn]);
@@ -333,6 +333,12 @@ namespace Notenverwaltung {
                         Console.Error.WriteLine("Format wurde falsch konvertiert (z.B. Date nicht in String umgewandelt)");
                         Console.BackgroundColor = ConsoleColor.Black;
 
+                    }
+                    catch (System.IO.InvalidDataException e) {
+                        transaction.Rollback();
+                        DirectWriter.Warn("Query Ausführung wie vorhergesehen abgebrochen, da keine Beziehung existiert." + e);
+                        DirectWriter.Warn("Letzer Query=" + query);
+                        //throw;
                     }
                     catch (Exception e) {
                         transaction.Rollback();
@@ -378,7 +384,7 @@ namespace Notenverwaltung {
         }
 
         private AttributeToValuesDescription TransactFindQuery(string query, Entity entity) {
-            System.Console.WriteLine("query = " + query);
+            DirectWriter.Debug("search query = " + query);
             AttributeToValuesDescription entityDescription = entity.ToAttributeValueDescription();
             AttributeToValuesDescription retrievedDescription
                 = new AttributeToValuesDescription(
@@ -396,14 +402,14 @@ namespace Notenverwaltung {
                             //SQLiteDataReader rdr = command.ExecuteReader();
                             if (!rdr.HasRows) {
                                 rdr.Close();
-                                Console.WriteLine("Datensatz exisitert nicht für ID = " + entityDescription.primaryKeyValue);
+                                DirectWriter.Warn("Datensatz exisitert nicht für ID = " + entityDescription.primaryKeyValue);
                                 return null;
                             }
                             while (rdr.Read()) {
                                 foreach (KeyValue keyValuePair in entityDescription.GetAttributes()) {
                                     string fieldContent = "";
                                     object o = rdr[keyValuePair.GetKey()].GetType();
-                                    System.Console.WriteLine("Type = " + o.ToString());
+                                    DirectWriter.Debug("Type = " + o.ToString());
                                     if (rdr[keyValuePair.GetKey()].GetType() == typeof(string)) {
                                         fieldContent = (string)rdr[keyValuePair.GetKey()];
                                         retrievedDescription.AddStringAttribute(keyValuePair.GetKey(), fieldContent);
@@ -421,11 +427,11 @@ namespace Notenverwaltung {
                                     debugContent.Add(fieldContent);
                                 }
                                 if (entity.ToAttributeValueDescription().GetOneToXRelations().Count > 0) {
-                                    //Console.WriteLine("### Relationen existieren!");
+                                    DirectWriter.Debug("### Relationen existieren!");
                                     foreach (OneToXRelationKeyValue relationDescription
                                                 in entity.ToAttributeValueDescription().GetOneToXRelations()) {
-                                        //Console.WriteLine("Relationsdetails: " + relationDescription.GetOwnForeignColumnName() + " | " +
-                                        //relationDescription.GetForeignId());
+                                        DirectWriter.Debug("Relationsdetails: " + relationDescription.GetOwnForeignColumnName() + " | " +
+                                            relationDescription.GetForeignId());
                                         int foreignKey = int.Parse(rdr[relationDescription.GetOwnForeignColumnName()].ToString());
                                         OneToXRelationKeyValue updatedDescription = new OneToXRelationKeyValue(
                                             relationDescription.GetForeignTable(),
@@ -433,7 +439,7 @@ namespace Notenverwaltung {
                                             relationDescription.GetOwnForeignColumnName(),
                                             foreignKey
                                             );
-                                        //Console.WriteLine("### Gefundener foreign Key=" + foreignKey);
+                                        DirectWriter.Debug("### Gefundener foreign Key=" + foreignKey);
                                         retrievedDescription.AddOneToXRelation(updatedDescription);
                                     }
                                 }
@@ -473,7 +479,7 @@ namespace Notenverwaltung {
 
             for (int i = 0; i < debugContent.Count; i++) {
                 string sql = debugContent[i];
-                System.Console.WriteLine("FieldContents=" + sql);
+                DirectWriter.Debug("FieldContents=" + sql);
             }
             return retrievedDescription;
         }
@@ -506,7 +512,7 @@ namespace Notenverwaltung {
                 if (IsManyToManyEntryMissing(tablename, ownColumn, foreignColumn, primaryKey, foreignKey)) {
                     string statement = 
                         MakeManyToManyInsertStatement(tablename, ownColumn, foreignColumn, primaryKey, foreignKey);
-                    Console.WriteLine("manyToMany Statement =" + statement);
+                    DirectWriter.Debug("manyToMany Statement =" + statement);
                     TransactSimpleStatement(statement);
                 }
             }
@@ -544,13 +550,13 @@ namespace Notenverwaltung {
                         using (SQLiteDataReader rdr = command.ExecuteReader()) {
                             //SQLiteDataReader rdr = command.ExecuteReader();
                             if (!rdr.HasRows) {
-                                Console.WriteLine("Erfolgreich festgestellt, dass Beziehung nicht gesetzt ist");
+                                DirectWriter.Debug("Erfolgreich festgestellt, dass Beziehung nicht gesetzt ist");
                                 result = true;
                             }
                             while (rdr.Read()) {
-                                string ownColumnText = (string)rdr[ownColumn];
-                                string foreignColumnText = (string)rdr[foreignColumn];
-                                System.Console.WriteLine("Gefundene N-M-Beziehung:" + ownColumn + "=" + ownColumnText
+                                string ownColumnText = rdr[ownColumn].ToString();
+                                string foreignColumnText = rdr[foreignColumn].ToString();
+                                DirectWriter.Debug("Gefundene N-M-Beziehung:" + ownColumn + "=" + ownColumnText
                                     + foreignColumn + "=" + foreignColumnText);
                             }
                             transaction.Commit();

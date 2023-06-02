@@ -30,7 +30,7 @@ namespace Notenverwaltung {
             List<string> responseList = GetQueryReaderList("Select * From Lehrer Join Person ON Lehrer.PersonId = Person.PersonId;");
             for (int i = 0; i < responseList.Count; i++) {
                 string sql = responseList[i];
-                System.Console.WriteLine("Querycontent=" + sql);
+                DirectWriter.Debug("Querycontent=" + sql);
             }
             //GetQueryReaderList((new Person).?);
         }
@@ -109,9 +109,9 @@ namespace Notenverwaltung {
                         for (int i = 0; i < rdr.FieldCount; i++) {
                             columnContent.Add(rdr.GetValue(i).ToString());
                         }
-                        Console.WriteLine("Response for query " + query + " = " + foreName);
+                        DirectWriter.Debug("Response for query " + query + " = " + foreName);
                         foreach (string column in columnContent) {
-                            Console.WriteLine("Alle Columns=" + column);
+                            DirectWriter.Debug("Alle Columns=" + column);
                         }
                         readerContent.Add(foreName);
                     }

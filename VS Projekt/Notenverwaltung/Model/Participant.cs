@@ -57,14 +57,14 @@ namespace Notenverwaltung {
             }
             this.student = student;
 
-            //Course course = new Course();
-            //OneToXRelationKeyValue courseRelation = attributeToValuesDescription.GetOneToXRelation(TableNotation.course);
-            //tempForeignCourseId = courseRelation.GetForeignId();
-            //if (course.FindById(tempForeignCourseId) == null) {
-            //    throw new ArgumentException("Kurs mit ID=" + tempForeignCourseId +
-            //        "existiert nicht, Beziehung kann nicht erstellt werden");
-            //}
-            //this.course = course;
+            Course course = new Course();
+            OneToXRelationKeyValue courseRelation = attributeToValuesDescription.GetOneToXRelation(TableNotation.course);
+            tempForeignCourseId = courseRelation.GetForeignId();
+            if (course.FindById(tempForeignCourseId) == null) {
+                throw new ArgumentException("Kurs mit ID=" + tempForeignCourseId +
+                    "existiert nicht, Beziehung kann nicht erstellt werden");
+            }
+            this.course = course;
         }
     }
 }

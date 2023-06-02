@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectWriter.cs" />
     <Compile Include="DatabaseWrapper\ManyToManyKeyValue.cs" />
     <Compile Include="DatabaseWrapper\SimpleDate.cs" />
     <Compile Include="DatabaseWrapper\Entity.cs" />

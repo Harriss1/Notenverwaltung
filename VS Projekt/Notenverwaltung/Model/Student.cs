@@ -68,9 +68,9 @@ namespace Notenverwaltung {
             }
             this.person = personRelationship;
 
-            //Klassenmitglied
-            //TODO Endlosschleife: Student sucht seine Klasse mittels FindById, und Klasse sucht seine Studenten
-            // mittels FindById
+            // Klassenmitglied
+            // interessantes Problem Endlosschleife: Student sucht seine Klasse mittels FindById, und Klasse sucht seine Studenten
+            // mittels FindById > gelöst mittels Rekursionstiefe
             ManyToManyKeyValue studentHasClassRelation =
                 attributeToValuesDescription.GetManyToManyRelation(TableNotation.studentHasClass);
             if (studentHasClassRelation != null) {
@@ -94,23 +94,28 @@ namespace Notenverwaltung {
                 }
             }
 
-            // Kursteilnehmer
-            //ManyToManyKeyValue participantDescription =
-            //    attributeToValuesDescription.GetManyToManyRelation(TableNotation.participant);
-            //if (participantDescription != null) {
-            //    courses.Clear();
-            //    tempCourseForeignIds = participantDescription.GetForeignIds();
-            //    foreach (int courseId in tempCourseForeignIds) {
-            //        Course relatedCourse = new Course();
-            //        if (relatedCourse.FindById(courseId) == null) {
-            //            throw new ArgumentException("Klasse mit ID=" + courseId + " existiert nicht, Beziehung kann nicht erstellt werden");
-            //        }
-            //        else {
-            //            courses.Add(relatedCourse);
-            //            relatedCourse.Print();
-            //        }
-            //    }
-            //}
+           // Kursteilnehmer
+           ManyToManyKeyValue participantDescription =
+               attributeToValuesDescription.GetManyToManyRelation(TableNotation.participant);
+            if (participantDescription != null) {
+                courses.Clear();
+                tempCourseForeignIds = participantDescription.GetForeignIds();
+                foreach (int courseId in tempCourseForeignIds) {
+                    Course relatedCourse = new Course();
+                    if (attributeToValuesDescription.recursionLevel >= recursionMaxDepth) {
+                        //System.Console.WriteLine("Klasse mit ID =" + classId + " ==> Rekursionstiefe erreicht");
+                    }
+                    else {
+                        if (relatedCourse.FindById(courseId, attributeToValuesDescription.recursionLevel) == null) {
+                            throw new ArgumentException("Klasse mit ID=" + courseId + " existiert nicht, Beziehung kann nicht erstellt werden");
+                        }
+                        else {
+                            courses.Add(relatedCourse);
+                            relatedCourse.Print();
+                        }
+                    }
+                }
+            }
 
         }
 

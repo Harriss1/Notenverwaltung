@@ -12,7 +12,9 @@ using System.Data.SQLite;
 namespace Notenverwaltung {
     internal class Program {
         static void Main(string[] args) {
-            System.Console.WriteLine("Datenbank Anbindung:");
+            // Festlegen welche Art von Nachrichten ausgegeben werden.
+            DirectWriter.SetShowLevel(DirectWriter.ShowLevel.MESSAGE);
+            DirectWriter.Debug("Datenbank Anbindung:");
 
             DatabaseBuilder databaseBuilder = new SqliteDatabaseBuilder();
             databaseBuilder.InitCompleteDatabase();
@@ -21,27 +23,42 @@ namespace Notenverwaltung {
             
             DatabaseStorage storage = (DatabaseStorage) GlobalObjects.
                 Get(InterfaceListing.DatabaseStorage);
+            DirectWriter.Msg("############## Prototyp Notenverwaltung ################################");
+            DirectWriter.Msg("");
+            DirectWriter.Msg("technischer Prototyp zum Anlegen, Auslesen und Aktualisieren von Datensätzen in einer Notenverwaltung");
+
+            DirectWriter.Msg("Zum Fortfahren bitte beliebige Taste drücken");
+            System.Console.ReadKey();
+
+            DirectWriter.Msg("");
+            DirectWriter.Msg("Demonstration: Erstellung von Personen, Studenten, sowie Aktualisierung und Löschung.\n");
 
             Person rolf = new Person("Rolf", "Müller", "2022-12-18", "Bielefeld", "blastermaxxer", "123");
             rolf.Create();
             Person hermine = new Person("Hermine", "Ganges", "1800-12-15", "Pattern", "trabbi", "123");
             hermine.Create();
-            System.Console.WriteLine("Created: " + hermine.ToText());
+            DirectWriter.Msg("Created: " + hermine.ToText());
             Person gunnar = new Person("Gunnar", "Mülli", "2001-04-12", "Kölle", "zander", "123");
             gunnar.Create();
-            System.Console.WriteLine("Created: " + gunnar.ToText());
+            DirectWriter.Msg("Created: " + gunnar.ToText());
 
-            System.Console.WriteLine("Created: Name=" + rolf.firstname + " id=" + rolf.id);
+            DirectWriter.Msg("Created: Name=" + rolf.firstname + " id=" + rolf.id);
             rolf.firstname = "Lutz";
             rolf.lastname = "Mataica";
             rolf.Update();
 
-            System.Console.WriteLine("Updated: Name=" + rolf.firstname + ", " +rolf.lastname + " id=" + rolf.id);
-            System.Console.WriteLine("Updated: " + rolf.ToText());
+            DirectWriter.Msg("Updated: Name=" + rolf.firstname + ", " +rolf.lastname + " id=" + rolf.id);
+            DirectWriter.Msg("Updated: " + rolf.ToText());
             rolf.Delete();
-            System.Console.WriteLine("Deleted: " + rolf.ToText());
-            
-            System.Console.WriteLine("Suche Hermine");
+            DirectWriter.Msg("Deleted: " + rolf.ToText());
+
+            DirectWriter.Msg("Zum Fortfahren bitte beliebige Taste drücken");
+            System.Console.ReadKey();
+
+            DirectWriter.Msg("");
+            DirectWriter.Msg("Demonstration: Suche von einer Person, dieses Objekt wird dann verwendet um aus dieser einen Schüler zu erstellen, aus der zweiten und dritten Person wird ein Lehrer erstellt.\n");
+
+            DirectWriter.Msg("Suche Hermine");
             Person searchHermine = new Person();
             searchHermine.FindById(6);
             searchHermine.Print();
@@ -64,11 +81,16 @@ namespace Notenverwaltung {
             teacher.Create();
             teacher.Print();
 
-            // TODO
             Teacher searchHanz = new Teacher();
             searchHanz.FindById(2);
             searchHanz.Print();
 
+            DirectWriter.Msg("Zum Fortfahren bitte beliebige Taste drücken");
+            System.Console.ReadKey();
+
+            DirectWriter.Msg("");
+            DirectWriter.Msg("Demonstration: Erstellung eines Bildungsbereiches: Kunstpädagogik. Diesem Bildungsbereich wird eine Klasse zugeordnet.\n" +
+                "Im Anschluss wird der vorherig erstellte Student 'Hermine Ganges' dieser Klasse hinzugefügt.\n");
             BranchOfStudy kunstPaedagogik = new BranchOfStudy("Kunstpädagogik");
             kunstPaedagogik.Create();
             kunstPaedagogik.Print();
@@ -111,14 +133,27 @@ namespace Notenverwaltung {
             math.Print();
             math.subject.Print();
 
-            //Participant teilnehmer1 = new Participant(findTheFirstOne, math);
-            //teilnehmer1.Create();
-            //teilnehmer1.Print();
-            //teilnehmer1.student.person.Print();
-            //Grade gradeForTeilnehmer1 = new Grade(teilnehmer1, "nix zu sagen", "2022-10-10", 98);
-            //gradeForTeilnehmer1.Create();
-            //gradeForTeilnehmer1.Print();
-            
+            Participant teilnehmer1 = new Participant(findTheFirstOne, math);
+            teilnehmer1.Create();
+            teilnehmer1.Print();
+            teilnehmer1.student.person.Print();
+            Grade gradeForTeilnehmer1 = new Grade(teilnehmer1, "nix zu sagen", "2022-10-10", 98);
+            Grade grade2ForTeilnehmer1 = new Grade(teilnehmer1, "", "2022-10-10", 40);
+            Grade grade3ForTeilnehmer1 = new Grade(teilnehmer1, "Hausaufgabe vergessen", "2022-10-10", 0);
+            Grade grade4ForTeilnehmer1 = new Grade(teilnehmer1, "Klausur", "2022-10-10", 30);
+            gradeForTeilnehmer1.Create();
+            grade2ForTeilnehmer1.Create();
+            grade3ForTeilnehmer1.Create();
+            grade4ForTeilnehmer1.Create();
+            gradeForTeilnehmer1.Print();
+            gradeForTeilnehmer1.participant.student.person.Print();
+            grade2ForTeilnehmer1.Print();
+            grade2ForTeilnehmer1.participant.student.person.Print();
+            grade3ForTeilnehmer1.Print();
+            grade3ForTeilnehmer1.participant.student.person.Print();
+            grade4ForTeilnehmer1.Print();
+            grade4ForTeilnehmer1.participant.student.person.Print();
+
 
             // xTODO Find by ID (done)
             // xTODO Find By KeyValue - String (done)

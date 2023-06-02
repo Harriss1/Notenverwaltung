@@ -30,6 +30,9 @@ namespace Notenverwaltung {
             if (value.GetType() == typeof(DateTime)) {
                 return (new SimpleDate((DateTime)value)).ToText;
             }
+            if (value.GetType() == typeof(int)) {
+                return value.ToString();
+            }
             return (string)value;
         }
         public int GetValueInt() {
