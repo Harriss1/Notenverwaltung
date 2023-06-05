@@ -39,7 +39,7 @@ namespace Notenverwaltung {
             }
             oneToXRelationships.Add(toOneKeyValue);
         }
-        public List<OneToXRelationKeyValue> GetOneToXRelations() {
+        public List<OneToXRelationKeyValue> GetAllOneToXRelations() {
             return oneToXRelationships;
         }
 

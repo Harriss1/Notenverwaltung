@@ -126,16 +126,19 @@ namespace Notenverwaltung {
 
         public string DropAllTables() {
             return 
+                // in der Reihenfolge, wie sie abhängig sind:
+                // dh. eine Note ist einem Teilnehmer zugeordnet, also muss zuerst die Note weg.
+                // Eine Note ist ggf. auch durch einen Dozenten vergeben, dh. Dozenten erst nach Noten löschen
                 //"#Verbindungstabellen " +
                 "DROP TABLE if EXISTS Schueler_Hat_Klasse;" +
-                //"# Haupttabellen " +
+                //"# sekundäre, also abhängige Haupttabellen " +
                 "DROP TABLE if EXISTS Note;" +
                 "DROP TABLE if EXISTS Dozent;" +
                 "DROP TABLE if EXISTS lehrer;" +
                 "DROP TABLE if EXISTS Teilnehmer;" +
                 "DROP TABLE if EXISTS schueler;" +
+                //"# Primäre Haupttabellen " +
                 "DROP TABLE if EXISTS person; " +
-                //"# Von den Haupttabellen abhängige Haupttabellen " +
                 "DROP TABLE if EXISTS Klasse;" +
                 "DROP TABLE if EXISTS Bildungsgang;" +
                 "DROP TABLE if EXISTS Kurs;" +

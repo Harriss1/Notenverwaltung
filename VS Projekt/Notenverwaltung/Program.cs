@@ -11,27 +11,41 @@ using System.Data.SQLite;
 /// </summary>
 namespace Notenverwaltung {
     internal class Program {
+        /// <summary>
+        /// Demonstration des ORM für eine Notenverwaltung
+        /// Datenbanktyp ist austauschbar, hier wurde SQLite konkretisiert.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args) {
             // Festlegen welche Art von Nachrichten ausgegeben werden.
             DirectWriter.SetShowLevel(DirectWriter.ShowLevel.MESSAGE);
             DirectWriter.Debug("Datenbank Anbindung:");
 
+            // Datenbank Erstellung
             DatabaseBuilder databaseBuilder = new SqliteDatabaseBuilder();
             databaseBuilder.InitCompleteDatabase();
+
+            // Dependency Injection: Objekt Instanziieren und Global verfügbar machen
             DatabaseStorage databaseStorageObject = new SqliteDatabaseStorage();
             GlobalObjects.Add(databaseStorageObject, InterfaceListing.DatabaseStorage);
-            
             DatabaseStorage storage = (DatabaseStorage) GlobalObjects.
                 Get(InterfaceListing.DatabaseStorage);
+
+            // Demonstrationsdaten Anzeigen
             DirectWriter.Msg("############## Prototyp Notenverwaltung ################################");
             DirectWriter.Msg("");
             DirectWriter.Msg("technischer Prototyp zum Anlegen, Auslesen und Aktualisieren von Datensätzen in einer Notenverwaltung");
 
-            DirectWriter.Msg("Zum Fortfahren bitte beliebige Taste drücken");
+            DirectWriter.Msg("Für Starten der ersten Demonstration bitte beliebige Taste drücken");
             System.Console.ReadKey();
 
             DirectWriter.Msg("");
             DirectWriter.Msg("Demonstration: Erstellung von Personen, Studenten, sowie Aktualisierung und Löschung.\n");
+            DirectWriter.Msg("---------------------");
+            DirectWriter.Msg("");
+            DirectWriter.Msg("(bitte Taste drücken)");
+            System.Console.ReadKey();
+
 
             Person rolf = new Person("Rolf", "Müller", "2022-12-18", "Bielefeld", "blastermaxxer", "123");
             rolf.Create();
@@ -52,11 +66,16 @@ namespace Notenverwaltung {
             rolf.Delete();
             DirectWriter.Msg("Deleted: " + rolf.ToText());
 
-            DirectWriter.Msg("Zum Fortfahren bitte beliebige Taste drücken");
+            DirectWriter.Msg("Für nächste Demonstration bitte beliebige Taste drücken");
             System.Console.ReadKey();
 
             DirectWriter.Msg("");
             DirectWriter.Msg("Demonstration: Suche von einer Person, dieses Objekt wird dann verwendet um aus dieser einen Schüler zu erstellen, aus der zweiten und dritten Person wird ein Lehrer erstellt.\n");
+            DirectWriter.Msg("---------------------");
+            DirectWriter.Msg("");
+            DirectWriter.Msg("(bitte Taste drücken)");
+            System.Console.ReadKey();
+
 
             DirectWriter.Msg("Suche Hermine");
             Person searchHermine = new Person();
@@ -85,12 +104,17 @@ namespace Notenverwaltung {
             searchHanz.FindById(2);
             searchHanz.Print();
 
-            DirectWriter.Msg("Zum Fortfahren bitte beliebige Taste drücken");
+            DirectWriter.Msg("Für nächste Demonstration bitte beliebige Taste drücken");
             System.Console.ReadKey();
 
             DirectWriter.Msg("");
             DirectWriter.Msg("Demonstration: Erstellung eines Bildungsbereiches: Kunstpädagogik. Diesem Bildungsbereich wird eine Klasse zugeordnet.\n" +
                 "Im Anschluss wird der vorherig erstellte Student 'Hermine Ganges' dieser Klasse hinzugefügt.\n");
+            DirectWriter.Msg("---------------------");
+            DirectWriter.Msg("");
+            DirectWriter.Msg("(bitte Taste drücken)\n");
+            System.Console.ReadKey();
+
             BranchOfStudy kunstPaedagogik = new BranchOfStudy("Kunstpädagogik");
             kunstPaedagogik.Create();
             kunstPaedagogik.Print();
@@ -105,17 +129,24 @@ namespace Notenverwaltung {
             student1.Print();
             student1.AddToClass(icd13); 
             student1.Print();
+            student1.classes.ForEach(x => x.Print());
 
-            //System.Console.ReadKey();
-            System.Console.WriteLine("Kein Loop##################");
+            DirectWriter.Msg("Für nächste Demonstration bitte beliebige Taste drücken");
+            System.Console.ReadKey();
+
+            DirectWriter.Msg("");
+            DirectWriter.Msg("Demonstration: ein weiteren Student der Klasse hinzufügen.\n");
+            DirectWriter.Msg("---------------------");
+            DirectWriter.Msg("");
+            DirectWriter.Msg("(bitte Taste drücken)\n");
+            System.Console.ReadKey();
+
             student1.Update();
-            //System.Console.ReadKey();
-            System.Console.WriteLine("Loop##################");
             icd13.AddClassMember(student1);
             icd13.AddClassMember(hermineStudent);
             icd13.Update();
             icd13.Print();
-            System.Console.WriteLine("########################### foreach classmember ###");
+            System.Console.WriteLine("### Alle Klassenmitglieder ausgeben: ###");
             //System.Console.ReadKey();
             icd13.enrolledStudents.ForEach(student => student.Print());
             Student findTheFirstOne = new Student();
@@ -125,6 +156,18 @@ namespace Notenverwaltung {
             foreach(Class hisClass in findTheFirstOne.classes) {
                 hisClass.Print();
             }
+
+
+            DirectWriter.Msg("Für nächste Demonstration bitte beliebige Taste drücken");
+            System.Console.ReadKey();
+
+            DirectWriter.Msg("");
+            DirectWriter.Msg("Demonstration: Ein Fach erstellen, diesem Fach Teilnehmer hinzufügen.\n");
+            DirectWriter.Msg("---------------------");
+            DirectWriter.Msg("");
+            DirectWriter.Msg("(bitte Taste drücken)\n");
+            System.Console.ReadKey();
+
             Subject mathSubject = new Subject("Mathematik Grundlagen", "MA");
             mathSubject.Create();
             mathSubject.Print();
@@ -137,6 +180,17 @@ namespace Notenverwaltung {
             teilnehmer1.Create();
             teilnehmer1.Print();
             teilnehmer1.student.person.Print();
+
+            DirectWriter.Msg("Für nächste Demonstration bitte beliebige Taste drücken");
+            System.Console.ReadKey();
+
+            DirectWriter.Msg("");
+            DirectWriter.Msg("Demonstration: Ein Teilnehmer in einem Fach erhalten Noten, es werden alle Noten angezeigt die ein Teilnehmer erhalten hat.\n");
+            DirectWriter.Msg("---------------------");
+            DirectWriter.Msg("");
+            DirectWriter.Msg("(bitte Taste drücken)\n");
+            System.Console.ReadKey();
+
             Grade gradeForTeilnehmer1 = new Grade(teilnehmer1, "nix zu sagen", "2022-10-10", 98);
             Grade grade2ForTeilnehmer1 = new Grade(teilnehmer1, "", "2022-10-10", 40);
             Grade grade3ForTeilnehmer1 = new Grade(teilnehmer1, "Hausaufgabe vergessen", "2022-10-10", 0);
@@ -145,6 +199,11 @@ namespace Notenverwaltung {
             grade2ForTeilnehmer1.Create();
             grade3ForTeilnehmer1.Create();
             grade4ForTeilnehmer1.Create();
+
+            DirectWriter.Msg("\n# Kursname:");
+            gradeForTeilnehmer1.participant.course.Print();
+
+            DirectWriter.Msg("# Noten und Namen der einzelnen Teilnehmer:");
             gradeForTeilnehmer1.Print();
             gradeForTeilnehmer1.participant.student.person.Print();
             grade2ForTeilnehmer1.Print();
@@ -153,26 +212,14 @@ namespace Notenverwaltung {
             grade3ForTeilnehmer1.participant.student.person.Print();
             grade4ForTeilnehmer1.Print();
             grade4ForTeilnehmer1.participant.student.person.Print();
+            
 
+            DirectWriter.Msg("");
+            DirectWriter.Msg("######### Ende der Demonstration #####################.\n");
 
-            // xTODO Find by ID (done)
-            // xTODO Find By KeyValue - String (done)
-            // xTODO Beziehungen (done)
-            // nicht Suchfunktion verfeinern, sie ist bereits ausreichend/nicht Tiel der Aufgabe!
-            // xTODO Create + Demodaten Bildungsgang
-            // xTODO Attribute: DateTime und Integer!
-            // xTODO Schüler hat viele Klassen
-            // xTODO Klasse hat viele Schüler
-            // xTODO FindByOtherATtribute relatiert Many To Manybeziehungen.
-            // xTODO Schüler einen Bildungsgang, Kurs, Klasse zuweisen
-            // xTODO xKurs,  xDozent,
-            // TODO Dozent und Schülerhatklasse testen
-            // TODO Teilnehmer
-            // TODO Note, Notentyp
-            // TODO Infos ausgeben zu jeden Objekt als ganze Zeile
-            // TODO Einzelne Schüler ansteuern/hinzufügen usw...
-            // Fach nicht machen
-            System.Console.ReadLine();
+            DirectWriter.Msg("Zum Beenden bitte beliebige Taste drücken");
+            System.Console.ReadKey();
+
 
         }
     }

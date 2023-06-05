@@ -11,7 +11,7 @@ namespace Notenverwaltung {
     internal static class GlobalObjects {
         private class ObjectContainer {
             public InterfaceListing keyInterface;
-            public object distinctObject;
+            public object distinctObject; // einzigartig bzw. unique
             public ObjectContainer(InterfaceListing keyInterface, object obj) {
                 this.distinctObject = obj;
                 this.keyInterface = keyInterface;

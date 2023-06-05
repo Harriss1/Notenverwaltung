@@ -143,10 +143,10 @@ namespace Notenverwaltung {
                     text += " | ";
                 }
             }
-            for (int i = 0; i < ToAttributeValueDescription().GetOneToXRelations().Count; i++) {
-                text += " | " + ToAttributeValueDescription().GetOneToXRelations()[i].GetOwnForeignColumnName() + "=";
-                text += ToAttributeValueDescription().GetOneToXRelations()[i].GetForeignId();
-                if (i < ToAttributeValueDescription().GetOneToXRelations().Count - 1) {
+            for (int i = 0; i < ToAttributeValueDescription().GetAllOneToXRelations().Count; i++) {
+                text += " | " + ToAttributeValueDescription().GetAllOneToXRelations()[i].GetOwnForeignColumnName() + "=";
+                text += ToAttributeValueDescription().GetAllOneToXRelations()[i].GetForeignId();
+                if (i < ToAttributeValueDescription().GetAllOneToXRelations().Count - 1) {
                     text += " | ";
                 }
             }

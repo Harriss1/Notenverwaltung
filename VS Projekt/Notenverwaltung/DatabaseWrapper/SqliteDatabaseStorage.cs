@@ -4,6 +4,11 @@ using System.Data.SQLite;
 using System.IO;
 
 namespace Notenverwaltung {
+    /// <summary>
+    /// Sqlite Anbindung mittels Tutorial von:
+    /// https://www.codeguru.com/dotnet/using-sqlite-in-a-c-application/
+    /// 
+    /// </summary>
     internal class SqliteDatabaseStorage : DatabaseStorage {
         private SqliteDatabaseBuilder builder = new SqliteDatabaseBuilder();
 
@@ -48,7 +53,7 @@ namespace Notenverwaltung {
                 insertQuery += ", ";
             }
             // INSERT INTO Lehre) Values);
-            foreach (OneToXRelationKeyValue relation in entity.ToAttributeValueDescription().GetOneToXRelations()) {
+            foreach (OneToXRelationKeyValue relation in entity.ToAttributeValueDescription().GetAllOneToXRelations()) {
                 insertQuery += relation.GetOwnForeignColumnName();
                 insertQuery += ", ";
             }
@@ -78,7 +83,7 @@ namespace Notenverwaltung {
                     insertQuery += ", ";
                 }
             }
-            foreach (OneToXRelationKeyValue relation in entity.ToAttributeValueDescription().GetOneToXRelations()) {
+            foreach (OneToXRelationKeyValue relation in entity.ToAttributeValueDescription().GetAllOneToXRelations()) {
                 insertQuery += "'" + relation.GetForeignId() + "'";
                 insertQuery += ", ";
             }
@@ -426,10 +431,10 @@ namespace Notenverwaltung {
                                     }
                                     debugContent.Add(fieldContent);
                                 }
-                                if (entity.ToAttributeValueDescription().GetOneToXRelations().Count > 0) {
+                                if (entity.ToAttributeValueDescription().GetAllOneToXRelations().Count > 0) {
                                     DirectWriter.Debug("### Relationen existieren!");
                                     foreach (OneToXRelationKeyValue relationDescription
-                                                in entity.ToAttributeValueDescription().GetOneToXRelations()) {
+                                                in entity.ToAttributeValueDescription().GetAllOneToXRelations()) {
                                         DirectWriter.Debug("Relationsdetails: " + relationDescription.GetOwnForeignColumnName() + " | " +
                                             relationDescription.GetForeignId());
                                         int foreignKey = int.Parse(rdr[relationDescription.GetOwnForeignColumnName()].ToString());

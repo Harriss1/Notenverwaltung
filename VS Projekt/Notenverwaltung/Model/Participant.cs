@@ -11,6 +11,7 @@ namespace Notenverwaltung {
         private int tempForeignStudentId = -1;
         public Course course;
         private int tempForeignCourseId = -1;
+        // Alle Noten eines Teilnehmers abfragen fehlt. Dh. Grades-Relation müsste man hier nachpflegen.
 
         public Participant() : base() { }
         public Participant(Student student, Course course) {
